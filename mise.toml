@@ -1,0 +1,23 @@
+[env]
+_.file = [".env.json", ".env.local"]
+ENVIRONMENT = { required = "\"production\" | \"staging\"" }
+
+[tools]
+"go" = "1.25.5"
+"aqua:docker/compose" = "latest"
+"github:railwayapp/cli" = "latest"
+
+# --- tasks ---
+[tasks."run:prometheus"]
+description = "Run the API server"
+run = """
+  docker-compose up
+"""
+
+[tasks.env]
+description = "Download environment variables from Railway to .env"
+sources = [".env.local"]
+outputs = [".env.json"]
+run = """
+  railway variables --environment {{ env.ENVIRONMENT }} --service "Prometheus" --json > .env.json
+"""
