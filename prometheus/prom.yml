@@ -10,4 +10,4 @@ scrape_configs:
   - job_name: "huddle-api"
     metrics_path: "/metrics"
     static_configs:
-      - targets: ["${API_URL}"]
+      - targets: ["${SERVICE_API_URL}"]
