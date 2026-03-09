@@ -2,5 +2,4 @@ ARG VERSION=12.3.2
 
 FROM grafana/grafana-oss:${VERSION}
 
-# copy the datasources and dashboards
 COPY datasources /etc/grafana/provisioning/datasources
