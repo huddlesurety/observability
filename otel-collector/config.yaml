@@ -7,6 +7,7 @@ receivers:
         endpoint: "0.0.0.0:${env:OTLP_HTTP_PORT}"
 
 exporters:
+  debug:
   prometheus:
     endpoint: "0.0.0.0:${env:PROMETHEUS_EXPORTER_PORT}"
 
@@ -24,3 +25,7 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [prometheus]
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]
