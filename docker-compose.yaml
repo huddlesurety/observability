@@ -3,6 +3,8 @@ services:
     build:
       context: ./prometheus
       dockerfile: Dockerfile
+      args:
+        - VERSION=${PROMETHEUS_VERSION:-v3.5.1}
     volumes:
       - prometheus_data:/prometheus
     environment:
@@ -25,6 +27,8 @@ services:
     build:
       context: ./grafana
       dockerfile: Dockerfile
+      args:
+        - VERSION=${GRAFANA_VERSION:-12.3.2}
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
