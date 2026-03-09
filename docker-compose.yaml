@@ -1,0 +1,36 @@
+services:
+  prometheus:
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+    volumes:
+      - prometheus_data:/prometheus
+    environment:
+      - OTEL_COLLECTOR_HOST=otel-collector.railway.internal
+      - OTEL_COLLECTOR_PORT=8889
+      - SCRAPE_INTERVAL=15s
+      - EVALUATION_INTERVAL=15s
+
+  otel-collector:
+    build:
+      context: ./otel-collector
+      dockerfile: Dockerfile
+    environment:
+      - OTLP_GRPC_PORT=4317
+      - OTLP_HTTP_PORT=4318
+      - PROMETHEUS_EXPORTER_PORT=8889
+      - HEALTH_CHECK_PORT=13133
+
+  grafana:
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - PROMETHEUS_HOST=prometheus.railway.internal
+      - PROMETHEUS_PORT=9090
+
+volumes:
+  prometheus_data:
+  grafana_data:
