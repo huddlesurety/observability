@@ -2,31 +2,23 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: "0.0.0.0:${env:OTLP_GRPC_PORT}"
       http:
+        endpoint: "0.0.0.0:${env:OTLP_HTTP_PORT}"
 
 exporters:
-  debug:
-    verbosity: detailed
-
   prometheus:
-    endpoint: "0.0.0.0:8889"
-    sending_queue:
-      batch:
-
-  logging:
+    endpoint: "0.0.0.0:${env:PROMETHEUS_EXPORTER_PORT}"
 
 processors:
   batch:
 
 extensions:
   health_check:
-  pprof:
-    endpoint: :1888
-  zpages:
-    endpoint: :55679
+    endpoint: "0.0.0.0:${env:HEALTH_CHECK_PORT}"
 
 service:
-  extensions: [pprof, zpages, health_check]
+  extensions: [health_check]
   pipelines:
     metrics:
       receivers: [otlp]

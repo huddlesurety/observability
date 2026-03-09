@@ -4,5 +4,9 @@ FROM prom/prometheus:${VERSION}
 
 COPY config.yaml /etc/prometheus/config.yaml
 
-# Command to run Prometheus
+ENV OTEL_COLLECTOR_HOST=otel-collector.railway.internal
+ENV OTEL_COLLECTOR_PORT=8889
+ENV SCRAPE_INTERVAL=15s
+ENV EVALUATION_INTERVAL=15s
+
 CMD ["--config.file=/etc/prometheus/config.yaml", "--storage.tsdb.path=/prometheus"]

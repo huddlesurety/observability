@@ -3,3 +3,6 @@ ARG VERSION=12.3.2
 FROM grafana/grafana-oss:${VERSION}
 
 COPY datasources /etc/grafana/provisioning/datasources
+
+ENV PROMETHEUS_HOST=prometheus.railway.internal
+ENV PROMETHEUS_PORT=9090
