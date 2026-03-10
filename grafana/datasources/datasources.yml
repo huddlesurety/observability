@@ -10,3 +10,17 @@ datasources:
     uid: grafana_prometheus
     url: http://${PROMETHEUS_HOST}:${PROMETHEUS_PORT}
     isDefault: true
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    orgId: 1
+    uid: grafana_tempo
+    url: http://${TEMPO_HOST}:${TEMPO_PORT}
+
+  - name: Loki
+    type: loki
+    access: proxy
+    orgId: 1
+    uid: grafana_loki
+    url: http://${LOKI_HOST}:${LOKI_PORT}

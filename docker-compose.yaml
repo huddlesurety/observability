@@ -22,19 +22,45 @@ services:
       - OTLP_HTTP_PORT=4318
       - PROMETHEUS_EXPORTER_PORT=8889
       - HEALTH_CHECK_PORT=13133
+      - TEMPO_ENDPOINT=http://tempo.railway.internal:4318
+      - LOKI_ENDPOINT=http://loki.railway.internal:3100/otlp
+
+  tempo:
+    build:
+      context: ./tempo
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${TEMPO_VERSION:-2.10.1}
+    volumes:
+      - tempo_data:/var/tempo
+
+  loki:
+    build:
+      context: ./loki
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${LOKI_VERSION:-3.5.11}
+    volumes:
+      - loki_data:/var/loki
 
   grafana:
     build:
       context: ./grafana
       dockerfile: Dockerfile
       args:
-        - VERSION=${GRAFANA_VERSION:-12.3.2}
+        - VERSION=${GRAFANA_VERSION:-12.4.1}
     volumes:
       - grafana_data:/var/lib/grafana
     environment:
       - PROMETHEUS_HOST=prometheus.railway.internal
       - PROMETHEUS_PORT=9090
+      - TEMPO_HOST=tempo.railway.internal
+      - TEMPO_PORT=3200
+      - LOKI_HOST=loki.railway.internal
+      - LOKI_PORT=3100
 
 volumes:
   prometheus_data:
   grafana_data:
+  tempo_data:
+  loki_data:
