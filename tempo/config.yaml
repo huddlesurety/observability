@@ -2,7 +2,7 @@ stream_over_http_enabled: true
 
 server:
   http_listen_port: ${PORT:-3200}
-  grpc_listen_port: 0
+  grpc_listen_port: 9095
 
 distributor:
   log_received_spans:
