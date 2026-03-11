@@ -5,6 +5,7 @@ FROM grafana/grafana-oss:${VERSION}
 USER root
 
 COPY datasources /etc/grafana/provisioning/datasources
+COPY dashboards /etc/grafana/provisioning/dashboards
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENV PORT=3000
