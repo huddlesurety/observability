@@ -366,7 +366,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -400,51 +400,215 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "grafana_loki"
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
       },
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
         "overrides": []
       },
       "gridPos": {
-        "h": 21,
-        "w": 12,
+        "h": 8,
+        "w": 6,
         "x": 0,
         "y": 10
       },
-      "id": 5,
+      "id": 12,
       "options": {
-        "dedupStrategy": "none",
-        "detailsMode": "sidebar",
-        "enableInfiniteScrolling": true,
-        "enableLogDetails": true,
-        "fontSize": "default",
-        "showControls": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "syntaxHighlighting": true,
-        "timestampResolution": "ms",
-        "unwrappedColumns": true,
-        "wrapLogMessage": false
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "expr": "sum(rate(http_server_request_duration_seconds_sum{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])) / (sum(rate(http_server_request_duration_seconds_count{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Average Latency",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 18,
+        "x": 6,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "calculate": false,
+        "cellGap": 1,
+        "color": {
+          "exponent": 0.5,
+          "fill": "dark-orange",
+          "mode": "scheme",
+          "reverse": false,
+          "scale": "exponential",
+          "scheme": "Oranges",
+          "steps": 64
+        },
+        "exemplars": {
+          "color": "rgba(255,0,255,0.7)"
+        },
+        "filterValues": {
+          "le": 1e-9
+        },
+        "legend": {
+          "show": true
+        },
+        "rowsFrame": {
+          "layout": "auto"
+        },
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single",
+          "show": true,
+          "showColorScale": false,
+          "yHistogram": true
+        },
+        "yAxis": {
+          "axisLabel": "Latency",
+          "axisPlacement": "left",
+          "reverse": false,
+          "unit": "s"
+        }
       },
       "pluginVersion": "12.4.0",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "grafana_loki"
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
           },
-          "direction": "backward",
           "editorMode": "builder",
-          "expr": "{service_name=\"API\", deployment_environment=\"$environment\"}",
-          "queryType": "range",
-          "refId": "log"
+          "expr": "sum by(le) (increase(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval]))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
         }
       ],
-      "title": "Logs",
-      "type": "logs"
+      "title": "Request Latency Distribution",
+      "type": "heatmap"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 0,
+        "y": 18
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])) * 60",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Request per Minute",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -570,10 +734,10 @@
         ]
       },
       "gridPos": {
-        "h": 10,
-        "w": 12,
-        "x": 12,
-        "y": 10
+        "h": 8,
+        "w": 18,
+        "x": 6,
+        "y": 18
       },
       "id": 4,
       "options": {
@@ -639,85 +803,51 @@
     },
     {
       "datasource": {
-        "type": "prometheus",
-        "uid": "grafana_prometheus"
+        "type": "loki",
+        "uid": "grafana_loki"
       },
       "fieldConfig": {
-        "defaults": {
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "scaleDistribution": {
-              "type": "linear"
-            }
-          }
-        },
+        "defaults": {},
         "overrides": []
       },
       "gridPos": {
-        "h": 11,
-        "w": 12,
-        "x": 12,
-        "y": 20
+        "h": 15,
+        "w": 24,
+        "x": 0,
+        "y": 26
       },
-      "id": 3,
+      "id": 5,
       "options": {
-        "calculate": false,
-        "cellGap": 1,
-        "color": {
-          "exponent": 0.5,
-          "fill": "dark-orange",
-          "mode": "scheme",
-          "reverse": false,
-          "scale": "exponential",
-          "scheme": "Oranges",
-          "steps": 64
-        },
-        "exemplars": {
-          "color": "rgba(255,0,255,0.7)"
-        },
-        "filterValues": {
-          "le": 1e-9
-        },
-        "legend": {
-          "show": true
-        },
-        "rowsFrame": {
-          "layout": "auto"
-        },
-        "showValue": "never",
-        "tooltip": {
-          "mode": "single",
-          "show": true,
-          "showColorScale": false,
-          "yHistogram": true
-        },
-        "yAxis": {
-          "axisLabel": "Latency",
-          "axisPlacement": "left",
-          "reverse": false,
-          "unit": "s"
-        }
+        "dedupStrategy": "none",
+        "detailsMode": "sidebar",
+        "enableInfiniteScrolling": true,
+        "enableLogDetails": true,
+        "fontSize": "default",
+        "showControls": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "syntaxHighlighting": true,
+        "timestampResolution": "ms",
+        "unwrappedColumns": true,
+        "wrapLogMessage": false
       },
       "pluginVersion": "12.4.0",
       "targets": [
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "grafana_prometheus"
+            "type": "loki",
+            "uid": "grafana_loki"
           },
+          "direction": "backward",
           "editorMode": "builder",
-          "expr": "sum by(le) (increase(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval]))",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A"
+          "expr": "{service_name=\"API\", deployment_environment=\"$environment\"}",
+          "queryType": "range",
+          "refId": "log"
         }
       ],
-      "title": "Request Latency Distribution",
-      "type": "heatmap"
+      "title": "Logs",
+      "type": "logs"
     }
   ],
   "preload": false,
@@ -758,6 +888,6 @@
   "timezone": "browser",
   "title": "API",
   "uid": "ad5z8t8",
-  "version": 8,
+  "version": 2,
   "weekStart": ""
 }
