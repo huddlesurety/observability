@@ -1,3 +1,6 @@
+# Railway template: import this file onto the Railway canvas to create all services.
+# All inter-service communication uses Railway private networking (*.railway.internal).
+
 services:
   prometheus:
     build:

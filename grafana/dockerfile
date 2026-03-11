@@ -1,13 +1,19 @@
+# UI for all observability data. Auto-provisions datasources and dashboards from files.
+# Grafana natively expands ${VAR} in provisioning YAML files.
+# To add dashboards: build in UI, export JSON, drop in grafana/dashboards/, redeploy.
+
 ARG VERSION=12.4.0
 
 FROM grafana/grafana-oss:${VERSION}
 
+# Railway volumes mount as root-owned directories
 USER root
 
 COPY datasources /etc/grafana/provisioning/datasources
 COPY dashboards /etc/grafana/provisioning/dashboards
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
+# Grafana uses GF_SERVER_HTTP_PORT internally — entrypoint.sh maps PORT to it
 ENV PORT=3000
 ENV PROMETHEUS_HOST=prometheus.railway.internal
 ENV PROMETHEUS_PORT=9090

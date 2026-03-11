@@ -5,12 +5,15 @@ receivers:
         endpoint: "0.0.0.0:${env:OTLP_HTTP_PORT}"
 
 exporters:
+  # Exposes metrics at :8889/metrics for Prometheus to scrape (pull model)
   prometheus:
     endpoint: "0.0.0.0:${env:PROMETHEUS_EXPORTER_PORT}"
 
+  # Pushes traces to Tempo's OTLP receiver (dedicated port, separate from Tempo's query API)
   otlphttp/tempo:
     endpoint: "${env:TEMPO_ENDPOINT}"
 
+  # Pushes logs to Loki's OTLP endpoint (served on Loki's main HTTP port at /otlp)
   otlphttp/loki:
     endpoint: "${env:LOKI_ENDPOINT}"
 

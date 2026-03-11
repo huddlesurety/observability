@@ -6,6 +6,7 @@ providers:
     folder: ""
     type: file
     disableDeletion: false
+    # Allows editing provisioned dashboards in the UI (export JSON to persist changes)
     allowUiUpdates: true
     options:
       path: /etc/grafana/provisioning/dashboards

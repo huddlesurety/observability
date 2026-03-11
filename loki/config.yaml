@@ -2,8 +2,10 @@ auth_enabled: false
 
 server:
   http_listen_port: ${PORT:-3100}
+  # gRPC not needed — OTel Collector pushes via HTTP, Grafana queries via HTTP
   grpc_listen_port: 0
 
+# Single-instance mode (inmemory ring, replication_factor=1)
 common:
   path_prefix: /var/loki
   storage:
@@ -17,6 +19,7 @@ common:
       store: inmemory
 
 limits_config:
+  # Required for OTLP log ingestion
   allow_structured_metadata: true
 
 schema_config:

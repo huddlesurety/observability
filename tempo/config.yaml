@@ -2,6 +2,7 @@ stream_over_http_enabled: true
 
 server:
   http_listen_port: ${PORT:-3200}
+  # Required for internal query-frontend communication, not exposed externally
   grpc_listen_port: 9095
 
 distributor:
@@ -10,6 +11,7 @@ distributor:
   receivers:
     otlp:
       protocols:
+        # Separate listener from the query API (PORT) — only the OTel Collector pushes here
         http:
           endpoint: "0.0.0.0:${OTLP_HTTP_PORT:-4318}"
 
