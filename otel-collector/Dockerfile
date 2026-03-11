@@ -2,7 +2,7 @@
 # Routes: metrics -> Prometheus exporter, traces -> Tempo, logs -> Loki.
 # Config uses ${env:VAR} syntax (native OTel Collector env expansion).
 
-FROM otel/opentelemetry-collector:0.147.0
+FROM otel/opentelemetry-collector-contrib:0.147.0
 
 COPY config.yaml /etc/config.yaml
 

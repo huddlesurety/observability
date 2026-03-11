@@ -5,20 +5,24 @@ receivers:
         endpoint: "0.0.0.0:${env:PORT}"
 
 exporters:
-  # Exposes metrics at :8889/metrics for Prometheus to scrape (pull model)
   prometheus:
     endpoint: "0.0.0.0:${env:PROMETHEUS_EXPORTER_PORT}"
 
-  # Pushes traces to Tempo's OTLP receiver (dedicated port, separate from Tempo's query API)
   otlp_http/tempo:
     endpoint: "${env:TEMPO_ENDPOINT}"
 
-  # Pushes logs to Loki's OTLP endpoint (served on Loki's main HTTP port at /otlp)
   otlp_http/loki:
     endpoint: "${env:LOKI_ENDPOINT}"
 
 processors:
   batch:
+  transform:
+    error_mode: ignore
+    metric_statements:
+      - context: datapoint
+        statements:
+          - set(attributes["service_name"], resource.attributes["service.name"])
+          - set(attributes["deployment_environment"], resource.attributes["deployment.environment"])
 
 extensions:
   health_check:
@@ -29,7 +33,7 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      processors: [batch]
+      processors: [batch, transform]
       exporters: [prometheus]
     traces:
       receivers: [otlp]
