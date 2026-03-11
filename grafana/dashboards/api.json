@@ -356,12 +356,12 @@
           "type": "prometheus",
           "uid": "grafana_prometheus"
         },
-        "definition": "label_values(environment)",
+        "definition": "label_values(deployment_environment)",
         "name": "environment",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(environment)",
+          "query": "label_values(deployment_environment)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
@@ -389,6 +389,6 @@
   "timezone": "browser",
   "title": "API",
   "uid": "ad5z8t8",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
