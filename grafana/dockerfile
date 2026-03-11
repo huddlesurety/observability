@@ -2,6 +2,8 @@ ARG VERSION=12.4.0
 
 FROM grafana/grafana-oss:${VERSION}
 
+USER root
+
 COPY datasources /etc/grafana/provisioning/datasources
 
 ENV PROMETHEUS_HOST=prometheus.railway.internal

@@ -30,7 +30,7 @@ services:
       context: ./tempo
       dockerfile: Dockerfile
       args:
-        - VERSION=${TEMPO_VERSION:-2.10.1}
+        - VERSION=${TEMPO_VERSION:-2.10.0}
     volumes:
       - tempo_data:/var/tempo
 
@@ -39,7 +39,7 @@ services:
       context: ./loki
       dockerfile: Dockerfile
       args:
-        - VERSION=${LOKI_VERSION:-3.5.11}
+        - VERSION=${LOKI_VERSION:-3.6.5}
     volumes:
       - loki_data:/var/loki
 
@@ -48,7 +48,7 @@ services:
       context: ./grafana
       dockerfile: Dockerfile
       args:
-        - VERSION=${GRAFANA_VERSION:-12.4.1}
+        - VERSION=${GRAFANA_VERSION:-12.4.0}
     volumes:
       - grafana_data:/var/lib/grafana
     environment:

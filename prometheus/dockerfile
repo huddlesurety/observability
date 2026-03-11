@@ -2,6 +2,8 @@ ARG VERSION=v3.5.1
 
 FROM prom/prometheus:${VERSION}
 
+USER root
+
 COPY config.yaml /etc/prometheus/config.yaml.tmpl
 COPY entrypoint.sh /entrypoint.sh
 
