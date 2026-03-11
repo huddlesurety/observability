@@ -10,11 +10,11 @@ exporters:
     endpoint: "0.0.0.0:${env:PROMETHEUS_EXPORTER_PORT}"
 
   # Pushes traces to Tempo's OTLP receiver (dedicated port, separate from Tempo's query API)
-  otlphttp/tempo:
+  otlp_http/tempo:
     endpoint: "${env:TEMPO_ENDPOINT}"
 
   # Pushes logs to Loki's OTLP endpoint (served on Loki's main HTTP port at /otlp)
-  otlphttp/loki:
+  otlp_http/loki:
     endpoint: "${env:LOKI_ENDPOINT}"
 
 processors:
@@ -34,8 +34,8 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/tempo]
+      exporters: [otlp_http/tempo]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlphttp/loki]
+      exporters: [otlp_http/loki]

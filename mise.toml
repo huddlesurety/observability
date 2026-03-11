@@ -1,0 +1,15 @@
+[env]
+_.file = [".env.local"]
+
+[settings]
+env_shell_expand = true
+
+[tools]
+"aqua:docker/cli" = "latest"
+
+# --- tasks ---
+[tasks.run]
+description = "Run the API server"
+run = """
+  docker compose up
+"""
