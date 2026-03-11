@@ -22,7 +22,7 @@ services:
       context: ./otel-collector
       dockerfile: Dockerfile
     environment:
-      - OTLP_HTTP_PORT=4318
+      - PORT=4318
       - PROMETHEUS_EXPORTER_PORT=8889
       - HEALTH_CHECK_PORT=13133
       - TEMPO_ENDPOINT=http://tempo.railway.internal:4318

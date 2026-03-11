@@ -2,7 +2,7 @@ receivers:
   otlp:
     protocols:
       http:
-        endpoint: "0.0.0.0:${env:OTLP_HTTP_PORT}"
+        endpoint: "0.0.0.0:${env:PORT}"
 
 exporters:
   # Exposes metrics at :8889/metrics for Prometheus to scrape (pull model)
