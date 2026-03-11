@@ -5,5 +5,9 @@ FROM grafana/loki:${VERSION}
 USER root
 
 COPY config.yaml /etc/loki/config.yaml
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-CMD ["-config.file=/etc/loki/config.yaml"]
+ENV PORT=3100
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["-config.file=/etc/loki/config.yaml", "-config.expand-env=true"]

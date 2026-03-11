@@ -1,8 +1,8 @@
 stream_over_http_enabled: true
 
 server:
-  http_listen_port: 3200
-  grpc_listen_port: 9095
+  http_listen_port: ${PORT:-3200}
+  grpc_listen_port: 0
 
 distributor:
   log_received_spans:
@@ -10,10 +10,8 @@ distributor:
   receivers:
     otlp:
       protocols:
-        grpc:
-          endpoint: "0.0.0.0:4317"
         http:
-          endpoint: "0.0.0.0:4318"
+          endpoint: "0.0.0.0:${OTLP_HTTP_PORT:-4318}"
 
 storage:
   trace:

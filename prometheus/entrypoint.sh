@@ -9,4 +9,5 @@ sed -e "s|\${OTEL_COLLECTOR_HOST}|${OTEL_COLLECTOR_HOST}|g" \
 
 exec prometheus \
   --config.file=/etc/prometheus/config.yaml \
-  --storage.tsdb.path=/prometheus
+  --storage.tsdb.path=/prometheus \
+  --web.listen-address="0.0.0.0:${PORT}"

@@ -1,8 +1,6 @@
 receivers:
   otlp:
     protocols:
-      grpc:
-        endpoint: "0.0.0.0:${env:OTLP_GRPC_PORT}"
       http:
         endpoint: "0.0.0.0:${env:OTLP_HTTP_PORT}"
 
