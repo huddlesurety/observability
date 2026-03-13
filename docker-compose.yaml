@@ -29,7 +29,6 @@ services:
     environment:
       - PORT=${OTEL_COLLECTOR_OTLP_PORT:-4318}
       - PROMETHEUS_EXPORTER_PORT=${OTEL_COLLECTOR_PROM_PORT:-8889}
-      - HEALTH_CHECK_PORT=${OTEL_COLLECTOR_HEALTH_PORT:-13133}
       - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://tempo.railway.internal:4318}
       - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://loki.railway.internal:3100/otlp}
 
