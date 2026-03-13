@@ -1,0 +1,204 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "description": "Largest Contentful Paint (LCP): measures loading performance. To provide a good user experience, LCP should occur within 2.5 seconds of when the page first starts loading.\nInteraction to Next Paint (INP): measures interactivity. To provide a good user experience, pages should have a INP of 200 milliseconds or less.\nCumulative Layout Shift (CLS): measures visual stability. To provide a good user experience, pages should maintain a CLS of 0.1. or less.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "histogram_quantile(0.90, sum by (le) (nextjs_web_vitals_bucket{name=\"LCP\"}))",
+          "legendFormat": "LCP",
+          "range": true,
+          "refId": "lcp"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "code",
+          "expr": "histogram_quantile(0.9, sum by(le) (nextjs_web_vitals_bucket{name=\"FCP\"}))",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "FCP",
+          "range": true,
+          "refId": "fcp"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "histogram_quantile(0.9, sum by(le) (nextjs_web_vitals_bucket{name=\"FID\"}))",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "FID",
+          "range": true,
+          "refId": "fid"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "histogram_quantile(0.9, sum by(le) (nextjs_web_vitals_bucket{name=\"INP\"}))",
+          "instant": false,
+          "legendFormat": "INP",
+          "range": true,
+          "refId": "inp"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "histogram_quantile(0.9, sum by(le) (nextjs_web_vitals_bucket{name=\"TTFB\"}))",
+          "hide": true,
+          "instant": false,
+          "legendFormat": "FFTB",
+          "range": true,
+          "refId": "ttfb"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "histogram_quantile(0.9, sum by(le) (nextjs_web_vitals_bucket{name=\"CLS\"}))",
+          "instant": false,
+          "legendFormat": "CLS",
+          "range": true,
+          "refId": "cls"
+        }
+      ],
+      "title": "Web Vitals",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "refresh": "5s",
+  "schemaVersion": 42,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "App",
+  "uid": "ads5l5m",
+  "version": 2,
+  "weekStart": ""
+}

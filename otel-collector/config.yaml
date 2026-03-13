@@ -24,21 +24,23 @@ processors:
           - set(attributes["service_name"], resource.attributes["service.name"])
           - set(attributes["deployment_environment"], resource.attributes["deployment.environment"])
 
-extensions:
-  health_check:
-    endpoint: "0.0.0.0:${env:HEALTH_CHECK_PORT}"
+connectors:
+  spanmetrics:
+    dimensions:
+      - name: http.method
+      - name: http.route
+      - name: http.status_code
 
 service:
-  extensions: [health_check]
   pipelines:
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, spanmetrics]
       processors: [batch, transform]
       exporters: [prometheus]
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp_http/tempo]
+      exporters: [otlp_http/tempo, spanmetrics]
     logs:
       receivers: [otlp]
       processors: [batch]
