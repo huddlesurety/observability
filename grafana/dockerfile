@@ -12,18 +12,3 @@ USER root
 COPY grafana.ini /etc/grafana/grafana.ini
 COPY datasources /etc/grafana/provisioning/datasources
 COPY dashboards /etc/grafana/provisioning/dashboards
-
-# Core defaults
-ENV PORT=3000
-ENV PROMETHEUS_HOST=prometheus.railway.internal
-ENV PROMETHEUS_PORT=9090
-ENV TEMPO_HOST=tempo.railway.internal
-ENV TEMPO_PORT=3200
-ENV LOKI_HOST=loki.railway.internal
-ENV LOKI_PORT=3100
-
-# OAuth/Security Defaults (can be overridden in Railway dashboard)
-ENV AUTH_GOOGLE_CLIENT_ID=""
-ENV AUTH_GOOGLE_CLIENT_SECRET=""
-ENV AUTH_GOOGLE_ALLOWED_DOMAINS=""
-ENV SERVER_DOMAIN="localhost"
