@@ -11,7 +11,7 @@ services:
     volumes:
       - prometheus_data:/prometheus
     ports:
-      - "${PROMETHEUS_LOCAL_PORT:-9090}:${PROMETHEUS_PORT:-9090}"
+      - "${PROMETHEUS_PORT:-9090}:${PROMETHEUS_PORT:-9090}"
     environment:
       - OTEL_COLLECTOR_HOST=${OTEL_COLLECTOR_HOST:-otel-collector.railway.internal}
       - OTEL_COLLECTOR_PORT=${OTEL_COLLECTOR_PORT:-8889}
@@ -24,11 +24,12 @@ services:
       context: ./otel-collector
       dockerfile: Dockerfile
     ports:
-      - "${OTEL_COLLECTOR_OTLP_LOCAL_PORT:-4318}:${OTEL_COLLECTOR_OTLP_PORT:-4318}"
-      - "${OTEL_COLLECTOR_PROM_LOCAL_PORT:-8889}:${OTEL_COLLECTOR_PROM_PORT:-8889}"
+      - "${OTEL_COLLECTOR_OTLP_PORT:-4318}:${OTEL_COLLECTOR_OTLP_PORT:-4318}"
+      - "${OTEL_COLLECTOR_PROM_PORT:-8889}:${OTEL_COLLECTOR_PROM_PORT:-8889}"
     environment:
       - PORT=${OTEL_COLLECTOR_OTLP_PORT:-4318}
       - PROMETHEUS_EXPORTER_PORT=${OTEL_COLLECTOR_PROM_PORT:-8889}
+      - HEALTH_CHECK_PORT=${OTEL_COLLECTOR_HEALTH_PORT:-13133}
       - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://tempo.railway.internal:4318}
       - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://loki.railway.internal:3100/otlp}
 
@@ -41,7 +42,7 @@ services:
     volumes:
       - tempo_data:/var/tempo
     ports:
-      - "${TEMPO_LOCAL_PORT:-3200}:${TEMPO_PORT:-3200}"
+      - "${TEMPO_PORT:-3200}:${TEMPO_PORT:-3200}"
     environment:
       - PORT=${TEMPO_PORT:-3200}
       - OTLP_HTTP_PORT=${TEMPO_OTLP_HTTP_PORT:-4318}
@@ -55,7 +56,7 @@ services:
     volumes:
       - loki_data:/var/loki
     ports:
-      - "${LOKI_LOCAL_PORT:-3100}:${LOKI_PORT:-3100}"
+      - "${LOKI_PORT:-3100}:${LOKI_PORT:-3100}"
     environment:
       - PORT=${LOKI_PORT:-3100}
 
@@ -68,15 +69,21 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     ports:
-      - "${GRAFANA_LOCAL_PORT:-3001}:${GRAFANA_PORT:-3000}"
+      - "3001:${GRAFANA_PORT:-3000}"
     environment:
-      - PORT=${GRAFANA_PORT:-3000}
       - PROMETHEUS_HOST=${PROMETHEUS_HOST:-prometheus.railway.internal}
       - PROMETHEUS_PORT=${PROMETHEUS_PORT:-9090}
       - TEMPO_HOST=${TEMPO_HOST:-tempo.railway.internal}
       - TEMPO_PORT=${TEMPO_PORT:-3200}
       - LOKI_HOST=${LOKI_HOST:-loki.railway.internal}
       - LOKI_PORT=${LOKI_PORT:-3100}
+      - PROTOCOL=${GRAFANA_PROTOCOL:-http}
+      - DOMAIN=${GRAFANA_DOMAIN:-localhost}
+      - PORT=${GRAFANA_PORT:-3000}
+      - ROOT_URL=${GRAFANA_ROOT_URL:-}
+      - AUTH_GOOGLE_CLIENT_ID=${GRAFANA_AUTH_GOOGLE_CLIENT_ID:-}
+      - AUTH_GOOGLE_CLIENT_SECRET=${GRAFANA_AUTH_GOOGLE_CLIENT_SECRET:-}
+      - AUTH_GOOGLE_ALLOWED_DOMAINS=${GRAFANA_AUTH_GOOGLE_ALLOWED_DOMAINS:-}
 
 volumes:
   prometheus_data:

@@ -1,5 +1,5 @@
 # UI for all observability data. Auto-provisions datasources and dashboards from files.
-# Grafana natively expands ${VAR} in provisioning YAML files.
+# Configured via grafana.ini (Google OAuth, Security, etc.)
 # To add dashboards: build in UI, export JSON, drop in grafana/dashboards/, redeploy.
 
 ARG VERSION=12.4.0
@@ -9,11 +9,11 @@ FROM grafana/grafana-oss:${VERSION}
 # Railway volumes mount as root-owned directories
 USER root
 
+COPY grafana.ini /etc/grafana/grafana.ini
 COPY datasources /etc/grafana/provisioning/datasources
 COPY dashboards /etc/grafana/provisioning/dashboards
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Grafana uses GF_SERVER_HTTP_PORT internally — entrypoint.sh maps PORT to it
+# Core defaults
 ENV PORT=3000
 ENV PROMETHEUS_HOST=prometheus.railway.internal
 ENV PROMETHEUS_PORT=9090
@@ -22,4 +22,8 @@ ENV TEMPO_PORT=3200
 ENV LOKI_HOST=loki.railway.internal
 ENV LOKI_PORT=3100
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# OAuth/Security Defaults (can be overridden in Railway dashboard)
+ENV AUTH_GOOGLE_CLIENT_ID=""
+ENV AUTH_GOOGLE_CLIENT_SECRET=""
+ENV AUTH_GOOGLE_ALLOWED_DOMAINS=""
+ENV SERVER_DOMAIN="localhost"
