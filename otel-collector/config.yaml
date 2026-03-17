@@ -3,6 +3,12 @@ receivers:
     protocols:
       http:
         endpoint: "0.0.0.0:${env:PORT}"
+        cors:
+          - "http://localhost:3000"
+          - "https://app.staging.huddlesurety.co"
+          - "https://app.huddlesurety.co"
+        allowed_headers:
+          - "*"
 
 exporters:
   prometheus:
