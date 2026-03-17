@@ -1,0 +1,86 @@
+logging {
+  level  = "info"
+  format = "json"
+}
+
+// 1. Receives OTLP data
+otelcol.receiver.otlp "default" {
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+  output {
+    // Send metrics to transform first, others directly to batch
+    metrics = [otelcol.processor.transform.add_resource_attributes.input]
+    logs    = [otelcol.processor.batch.default.input]
+    traces  = [otelcol.processor.batch.default.input]
+  }
+}
+
+// 2. PROMOTE resource attributes to metric labels
+otelcol.processor.transform "add_resource_attributes" {
+  error_mode = "ignore"
+  metric_statements {
+    context = "datapoint"
+    statements = [
+      // Copy service.name and deployment.environment to standard metric labels
+      "set(attributes[\"service_name\"], resource.attributes[\"service.name\"])",
+      "set(attributes[\"deployment_environment\"], resource.attributes[\"deployment.environment\"])",
+    ]
+  }
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+  }
+}
+
+otelcol.processor.batch "default" {
+  output {
+    metrics = [otelcol.exporter.prometheus.grafana_cloud_metrics.input]
+    logs    = [otelcol.exporter.loki.grafana_cloud_logs.input]
+    traces  = [otelcol.exporter.otlp.grafana_cloud_traces.input]
+  }
+}
+
+// Convert OTLP metrics to Prometheus format
+otelcol.exporter.prometheus "grafana_cloud_metrics" {
+  forward_to = [prometheus.remote_write.grafana_cloud_metrics.receiver]
+}
+
+// Convert OTLP logs to Loki format
+otelcol.exporter.loki "grafana_cloud_logs" {
+  forward_to = [loki.write.grafana_cloud_logs.receiver]
+}
+
+// Exports metrics to Grafana Cloud Prometheus
+prometheus.remote_write "grafana_cloud_metrics" {
+  endpoint {
+    url = env("GCLOUD_HOSTED_METRICS_URL")
+    basic_auth {
+      username = env("GCLOUD_HOSTED_METRICS_ID")
+      password = env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// Exports logs to Grafana Cloud Loki
+loki.write "grafana_cloud_logs" {
+  endpoint {
+    url = env("GCLOUD_HOSTED_LOGS_URL")
+    basic_auth {
+      username = env("GCLOUD_HOSTED_LOGS_ID")
+      password = env("GCLOUD_RW_API_KEY")
+    }
+  }
+}
+
+// Exports traces to Grafana Cloud Tempo
+otelcol.exporter.otlp "grafana_cloud_traces" {
+  client {
+    endpoint = env("GCLOUD_HOSTED_TRACES_URL")
+    auth     = otelcol.auth.basic.grafana_cloud_traces.handler
+  }
+}
+
+otelcol.auth.basic "grafana_cloud_traces" {
+  username = env("GCLOUD_HOSTED_TRACES_ID")
+  password = env("GCLOUD_RW_API_KEY")
+}

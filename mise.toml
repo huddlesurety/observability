@@ -1,6 +1,5 @@
 [env]
 _.file = [".env.local"]
-COMPOSE_BAKE = true
 
 [tools]
 "aqua:docker/cli" = "latest"
@@ -30,6 +29,10 @@ run = "docker compose up tempo"
 [tasks."run:otel"]
 description = "Start only OTel Collector"
 run = "docker compose up otel-collector"
+
+[tasks."run:alloy"]
+description = "Start only Alloy"
+run = "docker compose up alloy"
 
 [tasks.reset]
 description = "Wipe all local volumes and start the stack fresh"
@@ -80,4 +83,12 @@ run = """
   docker compose stop otel-collector
   docker compose rm -f -v otel-collector
   docker compose up --build otel-collector
+"""
+
+[tasks."reset:alloy"]
+description = "Restart Alloy fresh (stateless)"
+run = """
+  docker compose stop alloy
+  docker compose rm -f -v alloy
+  docker compose up --build alloy
 """
