@@ -103,7 +103,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "avg_over_time({service_name=\"App\", deployment_environment=\"$environment\"} |= `ttfb` | logfmt | kind = `measurement` | unwrap ttfb [$__range])",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -177,7 +177,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "avg_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= ` fcp=` | logfmt | kind = `measurement` | unwrap fcp [$__range])",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -253,7 +253,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "avg_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= `cls` | logfmt | kind = `measurement` | unwrap cls [$__range])",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -327,7 +327,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "avg_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= ` lcp=` | logfmt | kind = `measurement` | unwrap lcp [$__range])",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -399,9 +399,9 @@
             "uid": "grafana_loki"
           },
           "direction": "backward",
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "avg_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= ` fid=` | logfmt | kind = `measurement` | unwrap fid [$__range])",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
         }
       ],
@@ -1482,6 +1482,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "count_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= ` ttfb=` | logfmt | kind = `measurement` [$__interval])",
+          "legendFormat": "{{page_url}}",
           "queryType": "range",
           "refId": "A"
         }
@@ -1749,6 +1750,6 @@
   "timezone": "browser",
   "title": "App - Analytics",
   "uid": "CiroMopVz",
-  "version": 4,
+  "version": 2,
   "weekStart": ""
 }
