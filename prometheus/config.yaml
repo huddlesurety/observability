@@ -6,7 +6,7 @@ global:
   evaluation_interval: ${EVALUATION_INTERVAL}
 
 scrape_configs:
-  # Scrapes the OTel Collector's Prometheus exporter (pull model)
-  - job_name: "otel-collector"
+  # Scrapes Prometheus itself
+  - job_name: "prometheus"
     static_configs:
-      - targets: ["${OTEL_COLLECTOR_HOST}:${OTEL_COLLECTOR_PORT}"]
+      - targets: ["localhost:9090"]

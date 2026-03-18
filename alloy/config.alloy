@@ -9,20 +9,54 @@ otelcol.receiver.otlp "default" {
     endpoint = "0.0.0.0:4318"
   }
   output {
-    // Send metrics to transform first, others directly to batch
     metrics = [otelcol.processor.transform.add_resource_attributes.input]
     logs    = [otelcol.processor.batch.default.input]
     traces  = [otelcol.processor.batch.default.input]
   }
 }
 
-// 2. PROMOTE resource attributes to metric labels
+// 2. Receives Faro RUM data
+faro.receiver "default" {
+  server {
+    listen_address = "0.0.0.0"
+    cors_allowed_origins = ["*"]
+  }
+  
+  output {
+    logs   = [loki.process.faro_logs.receiver]
+    traces = [otelcol.processor.batch.default.input]
+  }
+}
+
+// 3. Process Faro Logs
+loki.process "faro_logs" {
+  forward_to = [loki.write.local.receiver]
+
+  stage.logfmt {
+    mapping = {
+      "service_name" = "app_name",
+      "session_id" = "session_id",
+      "browser" = "browser_name",
+      "deployment_environment" = "app_environment",
+    }
+  }
+
+  stage.labels {
+    values = {
+      "service_name" = "service_name",
+      "session_id" = "session_id",
+      "browser" = "browser",
+      "deployment_environment" = "deployment_environment",
+    }
+  }
+}
+
+// 4. PROMOTE resource attributes to metric labels
 otelcol.processor.transform "add_resource_attributes" {
   error_mode = "ignore"
   metric_statements {
     context = "datapoint"
     statements = [
-      // Copy service.name and deployment.environment to standard metric labels
       "set(attributes[\"service_name\"], resource.attributes[\"service.name\"])",
       "set(attributes[\"deployment_environment\"], resource.attributes[\"deployment.environment\"])",
     ]
@@ -34,53 +68,39 @@ otelcol.processor.transform "add_resource_attributes" {
 
 otelcol.processor.batch "default" {
   output {
-    metrics = [otelcol.exporter.prometheus.grafana_cloud_metrics.input]
-    logs    = [otelcol.exporter.loki.grafana_cloud_logs.input]
-    traces  = [otelcol.exporter.otlp.grafana_cloud_traces.input]
+    metrics = [otelcol.exporter.prometheus.local.input]
+    logs    = [otelcol.exporter.loki.local.input]
+    traces  = [otelcol.exporter.otlphttp.local.input]
   }
 }
 
 // Convert OTLP metrics to Prometheus format
-otelcol.exporter.prometheus "grafana_cloud_metrics" {
-  forward_to = [prometheus.remote_write.grafana_cloud_metrics.receiver]
+otelcol.exporter.prometheus "local" {
+  forward_to = [prometheus.remote_write.local.receiver]
 }
 
 // Convert OTLP logs to Loki format
-otelcol.exporter.loki "grafana_cloud_logs" {
-  forward_to = [loki.write.grafana_cloud_logs.receiver]
+otelcol.exporter.loki "local" {
+  forward_to = [loki.write.local.receiver]
 }
 
-// Exports metrics to Grafana Cloud Prometheus
-prometheus.remote_write "grafana_cloud_metrics" {
+// Exports metrics to Prometheus
+prometheus.remote_write "local" {
   endpoint {
-    url = env("GCLOUD_HOSTED_METRICS_URL")
-    basic_auth {
-      username = env("GCLOUD_HOSTED_METRICS_ID")
-      password = env("GCLOUD_RW_API_KEY")
-    }
+    url = env("PROMETHEUS_ENDPOINT")
   }
 }
 
-// Exports logs to Grafana Cloud Loki
-loki.write "grafana_cloud_logs" {
+// Exports logs to Loki
+loki.write "local" {
   endpoint {
-    url = env("GCLOUD_HOSTED_LOGS_URL")
-    basic_auth {
-      username = env("GCLOUD_HOSTED_LOGS_ID")
-      password = env("GCLOUD_RW_API_KEY")
-    }
+    url = env("LOKI_ENDPOINT")
   }
 }
 
-// Exports traces to Grafana Cloud Tempo
-otelcol.exporter.otlp "grafana_cloud_traces" {
+// Exports traces to Tempo via OTLP HTTP
+otelcol.exporter.otlphttp "local" {
   client {
-    endpoint = env("GCLOUD_HOSTED_TRACES_URL")
-    auth     = otelcol.auth.basic.grafana_cloud_traces.handler
+    endpoint = env("TEMPO_ENDPOINT")
   }
-}
-
-otelcol.auth.basic "grafana_cloud_traces" {
-  username = env("GCLOUD_HOSTED_TRACES_ID")
-  password = env("GCLOUD_RW_API_KEY")
 }

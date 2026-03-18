@@ -13,25 +13,10 @@ services:
     ports:
       - "${PROMETHEUS_PORT:-9090}:${PROMETHEUS_PORT:-9090}"
     environment:
-      - OTEL_COLLECTOR_HOST=${OTEL_COLLECTOR_HOST:-otel-collector.railway.internal}
-      - OTEL_COLLECTOR_PORT=${OTEL_COLLECTOR_PORT:-8889}
       - SCRAPE_INTERVAL=${SCRAPE_INTERVAL:-15s}
       - EVALUATION_INTERVAL=${EVALUATION_INTERVAL:-15s}
       - PORT=${PROMETHEUS_PORT:-9090}
 
-  otel-collector:
-    build:
-      context: ./otel-collector
-      dockerfile: Dockerfile
-    ports:
-      - "${OTEL_COLLECTOR_OTLP_PORT:-4318}:${OTEL_COLLECTOR_OTLP_PORT:-4318}"
-      - "${OTEL_COLLECTOR_PROM_PORT:-8889}:${OTEL_COLLECTOR_PROM_PORT:-8889}"
-    environment:
-      - PORT=${OTEL_COLLECTOR_OTLP_PORT:-4318}
-      - PROMETHEUS_EXPORTER_PORT=${OTEL_COLLECTOR_PROM_PORT:-8889}
-      - HEALTH_CHECK_PORT=${OTEL_COLLECTOR_HEALTH_PORT:-13133}
-      - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://tempo.railway.internal:4318}
-      - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://loki.railway.internal:3100/otlp}
 
   tempo:
     build:
@@ -68,6 +53,8 @@ services:
         - VERSION=${GRAFANA_VERSION:-12.4.0}
     volumes:
       - grafana_data:/var/lib/grafana
+      # Mount dashboards for hot-reloading in local dev without rebuilding the image
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
     ports:
       - "3001:${GRAFANA_PORT:-3000}"
     environment:
@@ -88,16 +75,16 @@ services:
       context: ./alloy
       dockerfile: Dockerfile
     ports:
-      - "12345:12345"
-      - "4318:4318"
+      - "${ALLOY_PORT:-12345}:${ALLOY_PORT:-12345}"
+      - "${ALLOY_OTLP_HTTP_PORT:-4318}:${ALLOY_OTLP_HTTP_PORT:-4318}"
+      - "${ALLOY_FARO_PORT:-12347}:${ALLOY_FARO_PORT:-12347}"
     environment:
-      - GCLOUD_HOSTED_METRICS_ID=${GCLOUD_HOSTED_METRICS_ID:-}
-      - GCLOUD_HOSTED_METRICS_URL=${GCLOUD_HOSTED_METRICS_URL:-}
-      - GCLOUD_HOSTED_LOGS_ID=${GCLOUD_HOSTED_LOGS_ID:-}
-      - GCLOUD_HOSTED_LOGS_URL=${GCLOUD_HOSTED_LOGS_URL:-}
-      - GCLOUD_HOSTED_TRACES_ID=${GCLOUD_HOSTED_TRACES_ID:-}
-      - GCLOUD_HOSTED_TRACES_URL=${GCLOUD_HOSTED_TRACES_URL:-}
-      - GCLOUD_RW_API_KEY=${GCLOUD_RW_API_KEY:-}
+      - PORT=${ALLOY_PORT:-12345}
+      - OTLP_HTTP_PORT=${ALLOY_OTLP_HTTP_PORT:-4318}
+      - FARO_PORT=${ALLOY_FARO_PORT:-12347}
+      - PROMETHEUS_ENDPOINT=${PROMETHEUS_ENDPOINT:-http://prometheus:9090/api/v1/write}
+      - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://tempo:4318}
+      - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://loki:3100/loki/api/v1/push}
 
 volumes:
   prometheus_data:

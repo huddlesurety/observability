@@ -4,8 +4,6 @@ _.file = [".env.local"]
 [tools]
 "aqua:docker/cli" = "latest"
 
-# --- tasks ---
-
 [tasks.run]
 description = "Start the full observability stack"
 run = "docker compose up"
@@ -26,10 +24,6 @@ run = "docker compose up loki"
 description = "Start only Tempo"
 run = "docker compose up tempo"
 
-[tasks."run:otel"]
-description = "Start only OTel Collector"
-run = "docker compose up otel-collector"
-
 [tasks."run:alloy"]
 description = "Start only Alloy"
 run = "docker compose up alloy"
@@ -47,7 +41,6 @@ run = """
   docker compose stop grafana
   docker compose rm -f -v grafana
   docker volume rm observability_grafana_data || true
-  docker compose up --build grafana
 """
 
 [tasks."reset:prometheus"]
@@ -56,7 +49,6 @@ run = """
   docker compose stop prometheus
   docker compose rm -f -v prometheus
   docker volume rm observability_prometheus_data || true
-  docker compose up --build prometheus
 """
 
 [tasks."reset:loki"]
@@ -65,7 +57,6 @@ run = """
   docker compose stop loki
   docker compose rm -f -v loki
   docker volume rm observability_loki_data || true
-  docker compose up --build loki
 """
 
 [tasks."reset:tempo"]
@@ -74,15 +65,6 @@ run = """
   docker compose stop tempo
   docker compose rm -f -v tempo
   docker volume rm observability_tempo_data || true
-  docker compose up --build tempo
-"""
-
-[tasks."reset:otel"]
-description = "Restart OTel Collector fresh (stateless)"
-run = """
-  docker compose stop otel-collector
-  docker compose rm -f -v otel-collector
-  docker compose up --build otel-collector
 """
 
 [tasks."reset:alloy"]
@@ -90,5 +72,4 @@ description = "Restart Alloy fresh (stateless)"
 run = """
   docker compose stop alloy
   docker compose rm -f -v alloy
-  docker compose up --build alloy
 """
