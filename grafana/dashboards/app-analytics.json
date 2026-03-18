@@ -399,7 +399,7 @@
             "uid": "grafana_loki"
           },
           "direction": "backward",
-          "editorMode": "code",
+          "editorMode": "builder",
           "expr": "avg_over_time({deployment_environment=\"$environment\", service_name=\"App\"} |= ` fid=` | logfmt | kind = `measurement` | unwrap fid [$__range])",
           "queryType": "instant",
           "refId": "A"
@@ -1738,6 +1738,20 @@
         "refresh": 1,
         "regex": "",
         "regexApplyTo": "value",
+        "staticOptions": [
+          {
+            "text": "production",
+            "value": "production"
+          },
+          {
+            "text": "staging",
+            "value": "staging"
+          },
+          {
+            "text": "local",
+            "value": "local"
+          }
+        ],
         "type": "query"
       }
     ]
@@ -1750,6 +1764,6 @@
   "timezone": "browser",
   "title": "App - Analytics",
   "uid": "CiroMopVz",
-  "version": 2,
+  "version": 3,
   "weekStart": ""
 }
