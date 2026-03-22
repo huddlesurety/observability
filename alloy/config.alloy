@@ -51,7 +51,7 @@ loki.process "faro_logs" {
   }
 }
 
-// 4. PROMOTE resource attributes to metric labels
+// 4. Promote resource attributes to metric labels
 otelcol.processor.transform "add_resource_attributes" {
   error_mode = "ignore"
   metric_statements {
@@ -103,4 +103,38 @@ otelcol.exporter.otlphttp "local" {
   client {
     endpoint = env("TEMPO_ENDPOINT")
   }
+}
+
+// Blackbox exporter for active health checking
+prometheus.exporter.blackbox "default" {
+  config = <<CONFIG
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      method: GET
+      tls_config:
+        insecure_skip_verify: true
+CONFIG
+
+  target {
+    name    = env("HEALTH_APP_TARGET_NAME")
+    address = env("HEALTH_APP_TARGET_ADDRESS")
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = env("HEALTH_API_TARGET_NAME")
+    address = env("HEALTH_API_TARGET_ADDRESS")
+    module  = "http_2xx"
+  }
+}
+
+// Scrape the blackbox exporter targets
+prometheus.scrape "blackbox" {
+  targets    = prometheus.exporter.blackbox.default.targets
+  forward_to = [prometheus.remote_write.local.receiver]
+  scrape_interval = "15s"
 }
