@@ -107,7 +107,7 @@ otelcol.exporter.otlphttp "local" {
 
 // Blackbox exporter for active health checking
 prometheus.exporter.blackbox "default" {
-  config = <<CONFIG
+  config = `
 modules:
   http_2xx:
     prober: http
@@ -117,7 +117,7 @@ modules:
       method: GET
       tls_config:
         insecure_skip_verify: true
-CONFIG
+`
 
   target {
     name    = env("HEALTH_APP_TARGET_NAME")
