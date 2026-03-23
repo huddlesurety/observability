@@ -975,7 +975,7 @@
               "mode": "none"
             },
             "thresholdsStyle": {
-              "mode": "line"
+              "mode": "dashed"
             }
           },
           "mappings": [],
@@ -1015,7 +1015,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1029,6 +1029,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "quantile_over_time(0.75, {deployment_environment=\"$environment\", service_name=\"App\"} |= ` cls=` | logfmt | kind = `measurement` | unwrap cls [5m]) by (service_name)",
+          "legendFormat": "cls",
           "queryType": "range",
           "refId": "A"
         }
