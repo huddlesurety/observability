@@ -30,6 +30,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "decimals": 2,
           "mappings": [],
           "max": 1,
           "min": 0,
@@ -47,7 +48,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 5,
         "w": 24,
         "x": 0,
         "y": 0
@@ -64,7 +65,7 @@
         "maxVizHeight": 300,
         "minVizHeight": 16,
         "minVizWidth": 8,
-        "namePlacement": "auto",
+        "namePlacement": "top",
         "orientation": "auto",
         "reduceOptions": {
           "calcs": [
@@ -147,9 +148,10 @@
         "h": 14,
         "w": 24,
         "x": 0,
-        "y": 8
+        "y": 5
       },
       "id": 1,
+      "maxDataPoints": 100,
       "options": {
         "colWidth": 0.9,
         "legend": {
@@ -184,6 +186,7 @@
     }
   ],
   "preload": false,
+  "refresh": "auto",
   "schemaVersion": 42,
   "tags": [],
   "templating": {
@@ -220,6 +223,6 @@
   "timezone": "browser",
   "title": "Status",
   "uid": "et7bd9n",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
