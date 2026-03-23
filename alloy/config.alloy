@@ -126,7 +126,7 @@ modules:
   }
 
   target {
-    name    = "Api-staging"
+    name    = "API-staging"
     address = "https://api.staging.huddlesurety.co/"
     module  = "http_2xx"
   }
@@ -138,7 +138,7 @@ modules:
   }
 
   target {
-    name    = "Api-production"
+    name    = "API-production"
     address = "https://api.huddlesurety.co/"
     module  = "http_2xx"
   }
