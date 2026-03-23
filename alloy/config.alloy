@@ -82,6 +82,11 @@ otelcol.exporter.prometheus "local" {
 // Convert OTLP logs to Loki format
 otelcol.exporter.loki "local" {
   forward_to = [loki.write.local.receiver]
+
+  resource_to_label_attributes = {
+    "service.name"           = "service_name",
+    "deployment.environment" = "deployment_environment",
+  }
 }
 
 // Exports metrics to Prometheus
@@ -95,11 +100,6 @@ prometheus.remote_write "local" {
 loki.write "local" {
   endpoint {
     url = env("LOKI_ENDPOINT")
-  }
-
-  resource_to_label_attributes = {
-    "service.name"           = "service_name",
-    "deployment.environment" = "deployment_environment",
   }
 }
 
