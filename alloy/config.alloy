@@ -120,14 +120,26 @@ modules:
 `
 
   target {
-    name    = env("HEALTH_APP_TARGET_NAME")
-    address = env("HEALTH_APP_TARGET_ADDRESS")
+    name    = "app-staging"
+    address = "https://app.staging.huddlesurety.co/api/health"
     module  = "http_2xx"
   }
 
   target {
-    name    = env("HEALTH_API_TARGET_NAME")
-    address = env("HEALTH_API_TARGET_ADDRESS")
+    name    = "api-staging"
+    address = "https://api.staging.huddlesurety.co/"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "app-production"
+    address = "https://app.huddlesurety.co/api/health"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "api-production"
+    address = "https://api.huddlesurety.co/"
     module  = "http_2xx"
   }
 }
@@ -140,10 +152,16 @@ discovery.relabel "blackbox" {
     target_label  = "target_address"
   }
 
-  // Also copy the 'name' label to 'service_name' so it matches the rest of the dashboards
   rule {
     source_labels = ["name"]
+    regex         = "([^-]+)-.*"
     target_label  = "service_name"
+  }
+
+  rule {
+    source_labels = ["name"]
+    regex         = "[^-]+-(.*)"
+    target_label  = "deployment_environment"
   }
 }
 

@@ -85,10 +85,6 @@ services:
       - PROMETHEUS_ENDPOINT=${PROMETHEUS_ENDPOINT:-http://${PROMETHEUS_HOST:-prometheus.railway.internal}:9090/api/v1/write}
       - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://${TEMPO_HOST:-tempo.railway.internal}:4318}
       - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://${LOKI_HOST:-loki.railway.internal}:3100/loki/api/v1/push}
-      - HEALTH_API_TARGET_NAME=${HEALTH_API_TARGET_NAME}
-      - HEALTH_API_TARGET_ADDRESS=${HEALTH_API_TARGET_ADDRESS}
-      - HEALTH_APP_TARGET_NAME=${HEALTH_APP_TARGET_NAME}
-      - HEALTH_APP_TARGET_ADDRESS=${HEALTH_APP_TARGET_ADDRESS}
 
 volumes:
   prometheus_data:
