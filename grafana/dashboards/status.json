@@ -70,7 +70,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 15,
+        "h": 26,
         "w": 18,
         "x": 0,
         "y": 0
@@ -84,7 +84,7 @@
           "placement": "bottom",
           "showLegend": false
         },
-        "rowHeight": 0.9,
+        "rowHeight": 0.98,
         "showValue": "never",
         "tooltip": {
           "hideZeros": false,
@@ -137,25 +137,18 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 15,
+        "h": 26,
         "w": 3,
         "x": 18,
         "y": 0
       },
       "id": 2,
       "options": {
-        "displayMode": "gradient",
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "maxVizHeight": 300,
-        "minVizHeight": 16,
-        "minVizWidth": 8,
-        "namePlacement": "hidden",
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
         "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -163,9 +156,9 @@
           "fields": "",
           "values": false
         },
-        "showUnfilled": true,
-        "sizing": "auto",
-        "valueMode": "color"
+        "showPercentChange": true,
+        "textMode": "value",
+        "wideLayout": true
       },
       "pluginVersion": "12.4.0",
       "targets": [
@@ -178,7 +171,7 @@
         }
       ],
       "title": "Uptime Ratio",
-      "type": "bargauge"
+      "type": "stat"
     },
     {
       "datasource": {
@@ -208,7 +201,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 15,
+        "h": 26,
         "w": 3,
         "x": 21,
         "y": 0
@@ -276,13 +269,13 @@
     ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Status",
   "uid": "et7bd9n",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
