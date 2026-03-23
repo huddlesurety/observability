@@ -153,13 +153,13 @@ discovery.relabel "blackbox" {
   }
 
   rule {
-    source_labels = ["name"]
+    source_labels = ["instance"]
     regex         = "([^-]+)-.*"
     target_label  = "service_name"
   }
 
   rule {
-    source_labels = ["name"]
+    source_labels = ["instance"]
     regex         = "[^-]+-(.*)"
     target_label  = "deployment_environment"
   }
