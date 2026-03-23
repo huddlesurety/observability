@@ -171,7 +171,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\"}[$__interval])",
+          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\"}[$__range])",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
@@ -276,13 +276,13 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Status",
   "uid": "et7bd9n",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
