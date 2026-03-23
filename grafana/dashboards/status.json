@@ -81,7 +81,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\"}[$__range])",
+          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\"}[$__interval])",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
@@ -213,7 +213,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
