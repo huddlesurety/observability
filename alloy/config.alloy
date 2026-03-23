@@ -153,14 +153,14 @@ discovery.relabel "blackbox" {
   }
 
   rule {
-    source_labels = ["instance"]
-    regex         = "([^-]+)-.*"
+    source_labels = ["job"]
+    regex         = "integrations/blackbox/([^-]+)-.*"
     target_label  = "service_name"
   }
 
   rule {
-    source_labels = ["instance"]
-    regex         = "[^-]+-(.*)"
+    source_labels = ["job"]
+    regex         = "integrations/blackbox/[^-]+-(.*)"
     target_label  = "deployment_environment"
   }
 }
