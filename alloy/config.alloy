@@ -120,25 +120,25 @@ modules:
 `
 
   target {
-    name    = "app-staging"
+    name    = "App-staging"
     address = "https://app.staging.huddlesurety.co/api/health"
     module  = "http_2xx"
   }
 
   target {
-    name    = "api-staging"
+    name    = "Api-staging"
     address = "https://api.staging.huddlesurety.co/"
     module  = "http_2xx"
   }
 
   target {
-    name    = "app-production"
+    name    = "App-production"
     address = "https://app.huddlesurety.co/api/health"
     module  = "http_2xx"
   }
 
   target {
-    name    = "api-production"
+    name    = "Api-production"
     address = "https://api.huddlesurety.co/"
     module  = "http_2xx"
   }
