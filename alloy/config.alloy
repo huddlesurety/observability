@@ -96,6 +96,11 @@ loki.write "local" {
   endpoint {
     url = env("LOKI_ENDPOINT")
   }
+
+  resource_to_label_attributes = {
+    "service.name"           = "service_name",
+    "deployment.environment" = "deployment_environment",
+  }
 }
 
 // Exports traces to Tempo via OTLP HTTP
