@@ -132,9 +132,24 @@ modules:
   }
 }
 
+discovery.relabel "blackbox" {
+  targets = prometheus.exporter.blackbox.default.targets
+
+  rule {
+    source_labels = ["__param_target"]
+    target_label  = "target_address"
+  }
+
+  // Also copy the 'name' label to 'service_name' so it matches the rest of the dashboards
+  rule {
+    source_labels = ["name"]
+    target_label  = "service_name"
+  }
+}
+
 // Scrape the blackbox exporter targets
 prometheus.scrape "blackbox" {
-  targets    = prometheus.exporter.blackbox.default.targets
-  forward_to = [prometheus.remote_write.local.receiver]
+  targets         = discovery.relabel.blackbox.output
+  forward_to      = [prometheus.remote_write.local.receiver]
   scrape_interval = "15s"
 }
