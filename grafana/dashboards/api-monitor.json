@@ -30,7 +30,7 @@
       },
       "id": 7,
       "panels": [],
-      "title": "Service",
+      "title": "Host",
       "type": "row"
     },
     {
@@ -41,8 +41,10 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -52,8 +54,7 @@
                 "value": 0
               }
             ]
-          },
-          "unit": "dtdurationms"
+          }
         },
         "overrides": []
       },
@@ -65,7 +66,7 @@
       },
       "id": 14,
       "options": {
-        "colorMode": "none",
+        "colorMode": "value",
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
@@ -85,13 +86,13 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "runtime_uptime_milliseconds_total",
+          "expr": "sum(probe_success{service_name=\"API\", deployment_environment=\"$environment\"})",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Last Uptime",
+      "title": "Instances",
       "type": "stat"
     },
     {
@@ -186,7 +187,7 @@
           "refId": "A"
         }
       ],
-      "title": "CPU Utilization",
+      "title": "CPU",
       "type": "timeseries"
     },
     {
@@ -358,7 +359,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -391,7 +392,7 @@
       },
       "id": 8,
       "panels": [],
-      "title": "API",
+      "title": "Requests",
       "type": "row"
     },
     {
@@ -578,7 +579,7 @@
           "refId": "p50"
         }
       ],
-      "title": "Request Latency Distribution",
+      "title": "Request Latency",
       "type": "timeseries"
     },
     {
@@ -877,7 +878,7 @@
           },
           "direction": "backward",
           "editorMode": "builder",
-          "expr": "{service_name=\"API\"}",
+          "expr": "{service_name=\"API\", deployment_environment=\"$environment\"}",
           "queryType": "range",
           "refId": "log"
         }
@@ -917,7 +918,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
