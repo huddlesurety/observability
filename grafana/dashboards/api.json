@@ -30,7 +30,7 @@
       },
       "id": 7,
       "panels": [],
-      "title": "Host",
+      "title": "Process",
       "type": "row"
     },
     {
@@ -45,7 +45,23 @@
             "mode": "fixed"
           },
           "fieldMinMax": false,
-          "mappings": [],
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 1,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 0,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -86,13 +102,13 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "sum(target_info{job=\"API\", deployment_environment=\"$environment\"})",
+          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"API\"}",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Instances",
+      "title": "Status",
       "type": "stat"
     },
     {
@@ -922,7 +938,7 @@
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "API - Monitor",
+  "title": "API",
   "uid": "ad5z8t8",
   "version": 2,
   "weekStart": ""
