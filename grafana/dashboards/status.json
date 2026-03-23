@@ -235,7 +235,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "sum by(job) (target_info{deployment_environment=\"$environment\"})",
+          "expr": "count by(job) (last_over_time(target_info{deployment_environment=\"$environment\"}[$__interval]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -283,6 +283,6 @@
   "timezone": "browser",
   "title": "Status",
   "uid": "et7bd9n",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
