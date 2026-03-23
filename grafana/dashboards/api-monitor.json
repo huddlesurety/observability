@@ -43,98 +43,6 @@
           "color": {
             "mode": "thresholds"
           },
-          "custom": {
-            "axisPlacement": "auto",
-            "fillOpacity": 100,
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineWidth": 0
-          },
-          "mappings": [
-            {
-              "options": {
-                "from": 1,
-                "result": {
-                  "color": "green",
-                  "index": 0,
-                  "text": "UP"
-                }
-              },
-              "type": "range"
-            },
-            {
-              "options": {
-                "match": "null+nan",
-                "result": {
-                  "color": "red",
-                  "index": 1,
-                  "text": "DOWN"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 3,
-        "w": 24,
-        "x": 0,
-        "y": 1
-      },
-      "id": 11,
-      "maxDataPoints": 100,
-      "options": {
-        "colWidth": 1,
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": false
-        },
-        "rowHeight": 1,
-        "showValue": "never",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "none",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.4.0",
-      "targets": [
-        {
-          "editorMode": "code",
-          "expr": "(rate(runtime_uptime_milliseconds_total{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval]) > 0)",
-          "legendFormat": "status",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Status History",
-      "type": "status-history"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafana_prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -153,7 +61,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 4
+        "y": 1
       },
       "id": 14,
       "options": {
@@ -177,7 +85,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "runtime_uptime_milliseconds_total{deployment_environment=\"$environment\", service_name=\"API\"}\n",
+          "expr": "runtime_uptime_milliseconds_total",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -252,7 +160,7 @@
         "h": 8,
         "w": 6,
         "x": 6,
-        "y": 4
+        "y": 1
       },
       "id": 6,
       "options": {
@@ -260,7 +168,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -272,8 +180,8 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "rate(system_cpu_time_seconds_total{service_name=\"API\", deployment_environment=\"$environment\", state!=\"idle\"}[$__rate_interval])",
-          "legendFormat": "{{state}}",
+          "expr": "rate(process_cpu_time_seconds_total{service_name=\"API\", deployment_environment=\"$environment\"}[$__rate_interval])",
+          "legendFormat": "{{cpu_mode}}",
           "range": true,
           "refId": "A"
         }
@@ -319,15 +227,13 @@
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
             }
           },
           "mappings": [],
-          "max": 1,
-          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -341,7 +247,7 @@
               }
             ]
           },
-          "unit": "percentunit"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -349,7 +255,7 @@
         "h": 8,
         "w": 6,
         "x": 12,
-        "y": 4
+        "y": 1
       },
       "id": 9,
       "options": {
@@ -357,7 +263,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -369,13 +275,13 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "system_memory_utilization_ratio{deployment_environment=\"$environment\", service_name=\"API\", state=\"used\"}",
-          "legendFormat": "{{state}}",
+          "expr": "sum(go_memory_used_bytes{service_name=\"API\", deployment_environment=\"$environment\"})",
+          "legendFormat": "used",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Memory Utilization",
+      "title": "Memory",
       "type": "timeseries"
     },
     {
@@ -444,7 +350,7 @@
         "h": 8,
         "w": 6,
         "x": 18,
-        "y": 4
+        "y": 1
       },
       "id": 10,
       "options": {
@@ -467,12 +373,12 @@
           "exemplar": false,
           "expr": "rate(system_network_io_bytes_total{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])",
           "instant": false,
-          "legendFormat": "{{direction}}",
+          "legendFormat": "{{network_io_direction}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Network Traffic",
+      "title": "Network",
       "type": "timeseries"
     },
     {
@@ -481,7 +387,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 9
       },
       "id": 8,
       "panels": [],
@@ -520,7 +426,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 13
+        "y": 10
       },
       "id": 12,
       "options": {
@@ -615,7 +521,7 @@
         "h": 8,
         "w": 18,
         "x": 6,
-        "y": 13
+        "y": 10
       },
       "id": 3,
       "options": {
@@ -707,7 +613,7 @@
         "h": 8,
         "w": 6,
         "x": 0,
-        "y": 21
+        "y": 18
       },
       "id": 13,
       "options": {
@@ -867,7 +773,7 @@
         "h": 8,
         "w": 18,
         "x": 6,
-        "y": 21
+        "y": 18
       },
       "id": 4,
       "options": {
@@ -944,7 +850,7 @@
         "h": 15,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 26
       },
       "id": 5,
       "options": {
@@ -971,7 +877,7 @@
           },
           "direction": "backward",
           "editorMode": "builder",
-          "expr": "{service_name=\"API\", deployment_environment=\"$environment\"}",
+          "expr": "{service_name=\"API\"}",
           "queryType": "range",
           "refId": "log"
         }
@@ -1018,6 +924,6 @@
   "timezone": "browser",
   "title": "API - Monitor",
   "uid": "ad5z8t8",
-  "version": 4,
+  "version": 3,
   "weekStart": ""
 }
