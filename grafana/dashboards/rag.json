@@ -119,8 +119,8 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "process_cpu_utilization_ratio{service_name=\"rag\"}",
-          "legendFormat": "Total",
+          "expr": "process_cpu_utilization_ratio{service_name=\"rag\", deployment_environment=\"staging\"}",
+          "legendFormat": "__auto",
           "range": true,
           "refId": "A"
         }
@@ -214,7 +214,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "process_memory_usage_bytes{service_name=\"rag\"}",
+          "expr": "process_memory_usage_bytes{service_name=\"rag\", deployment_environment=\"$environment\"}",
           "legendFormat": "Value",
           "range": true,
           "refId": "A"
@@ -309,7 +309,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "sum by(direction) (rate(system_network_io_bytes_total{service_name=\"rag\"}[$__rate_interval]))",
+          "expr": "sum by(direction) (rate(system_network_io_bytes_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__rate_interval]))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -388,7 +388,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "(sum(increase(llm_input_tokens_total{service_name=\"rag\"}[$__range]) * 0.3) / 1000000) + (sum(increase(llm_output_tokens_total{service_name=\"rag\"}[$__range]) * 2.5) / 1000000) + (sum(increase(embedding_input_tokens_total{service_name=\"rag\"}[$__range]) * 0.15) / 1000000)",
+          "expr": "(sum(increase(llm_input_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range]) * 0.3 / 1000000)) + (sum(increase(llm_output_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range]) * 2.5 / 1000000)) + (sum(increase(embedding_input_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range]) * 0.15 / 1000000))",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -455,7 +455,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(increase(llm_input_tokens_total{service_name=\"rag\"}[$__range])) / 1000",
+          "expr": "sum(increase(llm_input_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range])) / 1000",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -522,7 +522,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(increase(llm_output_tokens_total{service_name=\"rag\"}[$__range]) / 1000)",
+          "expr": "sum(increase(llm_output_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range]) / 1000)",
           "instant": true,
           "legendFormat": "__auto",
           "range": false,
@@ -589,7 +589,7 @@
           },
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "sum(increase(embedding_input_tokens_total{service_name=\"rag\"}[$__range]) / 1000)",
+          "expr": "sum(increase(embedding_input_tokens_total{service_name=\"rag\", deployment_environment=\"$environment\"}[$__range])) / 1000",
           "format": "time_series",
           "instant": true,
           "legendFormat": "__auto",
@@ -605,16 +605,39 @@
   "schemaVersion": 42,
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "text": "staging",
+          "value": "staging"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "grafana_prometheus"
+        },
+        "definition": "label_values(deployment_environment)",
+        "name": "environment",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(deployment_environment)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "regexApplyTo": "value",
+        "type": "query"
+      }
+    ]
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "RAG",
   "uid": "ta9lh6f",
-  "version": 3,
+  "version": 1,
   "weekStart": ""
 }
