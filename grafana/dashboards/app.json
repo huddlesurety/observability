@@ -1166,7 +1166,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "blue",
+            "mode": "continuous-BlYlRd"
           },
           "custom": {
             "axisBorderShow": false,
@@ -1177,7 +1178,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 28,
+            "fillOpacity": 0,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -1187,7 +1188,7 @@
             "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
+            "pointSize": 1,
             "scaleDistribution": {
               "type": "linear"
             },
@@ -1247,11 +1248,11 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -2092,8 +2093,8 @@
       {
         "allowCustomValue": true,
         "current": {
-          "text": "local",
-          "value": "local"
+          "text": "staging",
+          "value": "staging"
         },
         "datasource": {
           "type": "loki",
@@ -2139,6 +2140,6 @@
   "timezone": "browser",
   "title": "App",
   "uid": "CiroMopVz",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
