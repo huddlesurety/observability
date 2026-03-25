@@ -120,6 +120,12 @@ modules:
 `
 
   target {
+    name    = "Website-staging"
+    address = "https://staging.huddlesurety.co/"
+    module  = "http_2xx"
+  }
+
+  target {
     name    = "App-staging"
     address = "https://app.staging.huddlesurety.co/api/health"
     module  = "http_2xx"
@@ -134,6 +140,12 @@ modules:
   target {
     name    = "Internal API-staging"
     address = "https://internal-api.staging.huddlesurety.co/"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "Website-production"
+    address = "https://huddlesurety.co/"
     module  = "http_2xx"
   }
 
