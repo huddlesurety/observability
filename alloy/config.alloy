@@ -181,5 +181,5 @@ discovery.relabel "blackbox" {
 prometheus.scrape "blackbox" {
   targets         = discovery.relabel.blackbox.output
   forward_to      = [prometheus.remote_write.local.receiver]
-  scrape_interval = "15s"
+  scrape_interval = "1m"
 }
