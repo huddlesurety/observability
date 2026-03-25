@@ -21,6 +21,19 @@
   "links": [],
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 9,
+      "panels": [],
+      "title": "App",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "grafana_prometheus"
@@ -31,7 +44,7 @@
             "mode": "thresholds"
           },
           "custom": {
-            "axisPlacement": "auto",
+            "axisPlacement": "hidden",
             "fillOpacity": 70,
             "hideFrom": {
               "legend": false,
@@ -46,12 +59,12 @@
                 "0": {
                   "color": "red",
                   "index": 0,
-                  "text": "down"
+                  "text": "DOWN"
                 },
                 "1": {
                   "color": "green",
                   "index": 1,
-                  "text": "up"
+                  "text": "UP"
                 }
               },
               "type": "value"
@@ -70,13 +83,13 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 26,
+        "h": 5,
         "w": 18,
         "x": 0,
-        "y": 0
+        "y": 1
       },
-      "id": 1,
-      "maxDataPoints": 100,
+      "id": 4,
+      "maxDataPoints": 120,
       "options": {
         "colWidth": 0.9,
         "legend": {
@@ -100,7 +113,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\"}",
+          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"App\"}",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
@@ -137,76 +150,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 26,
+        "h": 5,
         "w": 3,
         "x": 18,
-        "y": 0
+        "y": 1
       },
-      "id": 2,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": true,
-        "textMode": "value",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.4.0",
-      "targets": [
-        {
-          "editorMode": "builder",
-          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\"}[$__range])",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Uptime Ratio",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafana_prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 26,
-        "w": 3,
-        "x": 21,
-        "y": 0
-      },
-      "id": 3,
+      "id": 5,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -228,14 +177,377 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "count by(job) (last_over_time(target_info{deployment_environment=\"$environment\"}[$__interval]))",
-          "legendFormat": "__auto",
+          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}[$__range])",
+          "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "Instances",
+      "title": "Uptime Ratio",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cloud_region"
+            },
+            "properties": []
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 21,
+        "y": 1
+      },
+      "id": 14,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "group by(cloud_region) (last_over_time(target_info{deployment_environment=\"$environment\", job=\"App\"}[$__interval]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Instances",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": false,
+              "__name__": true,
+              "deployment_environment": true,
+              "job": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Instances",
+              "cloud_region": "Region"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 6,
+      "panels": [],
+      "title": "API",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "hidden",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 18,
+        "x": 0,
+        "y": 7
+      },
+      "id": 10,
+      "maxDataPoints": 120,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.98,
+        "showValue": "never",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"API\"}",
+          "legendFormat": "{{service_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Status",
+      "type": "status-history"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 18,
+        "y": 7
+      },
+      "id": 12,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "inverted",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}[$__range])",
+          "legendFormat": "{{service_name}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Uptime Ratio",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "cloud_region"
+            },
+            "properties": []
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 3,
+        "x": 21,
+        "y": 7
+      },
+      "id": 3,
+      "options": {
+        "cellHeight": "sm",
+        "showHeader": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "exemplar": false,
+          "expr": "group by(cloud_region) (last_over_time(target_info{deployment_environment=\"$environment\", job=\"API\"}[$__interval]))",
+          "format": "table",
+          "instant": true,
+          "legendFormat": "__auto",
+          "range": false,
+          "refId": "A"
+        }
+      ],
+      "title": "Instances",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "Value": false,
+              "__name__": true,
+              "deployment_environment": true,
+              "job": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "Value": "Instances",
+              "cloud_region": "Region"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 16,
+      "panels": [],
+      "title": "RAG",
+      "type": "row"
     }
   ],
   "preload": false,
@@ -269,13 +581,13 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Status",
   "uid": "et7bd9n",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
