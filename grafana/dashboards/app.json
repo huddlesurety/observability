@@ -204,7 +204,7 @@
         {
           "editorMode": "builder",
           "expr": "sum(process_cpu_utilization{service_name=\"App\", deployment_environment=\"$environment\"})",
-          "legendFormat": "Total",
+          "legendFormat": "total",
           "range": true,
           "refId": "A"
         }
@@ -290,7 +290,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -299,7 +299,7 @@
         {
           "editorMode": "builder",
           "expr": "sum(process_memory_usage{service_name=\"App\", deployment_environment=\"$environment\"})",
-          "legendFormat": "__auto",
+          "legendFormat": "total",
           "range": true,
           "refId": "A"
         }
@@ -365,7 +365,7 @@
               }
             ]
           },
-          "unit": "binBps"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -385,7 +385,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -1548,6 +1548,7 @@
           "direction": "backward",
           "editorMode": "builder",
           "expr": "count_over_time({deployment_environment=\"$environment\", service_name=\"App\"} | logfmt | kind = `exception` [$__interval])",
+          "legendFormat": "{{value}}",
           "queryType": "range",
           "refId": "A"
         }

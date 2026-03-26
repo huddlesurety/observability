@@ -195,7 +195,7 @@
         {
           "editorMode": "builder",
           "expr": "sum(rate(process_cpu_time_seconds_total{service_name=\"API\", deployment_environment=\"$environment\"}[$__rate_interval]))",
-          "legendFormat": "Total",
+          "legendFormat": "total",
           "range": true,
           "refId": "A"
         }
@@ -290,7 +290,7 @@
         {
           "editorMode": "builder",
           "expr": "sum(go_memory_used_bytes{service_name=\"API\", deployment_environment=\"$environment\"})",
-          "legendFormat": "Total",
+          "legendFormat": "total",
           "range": true,
           "refId": "A"
         }
@@ -499,7 +499,7 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
+            "insertNulls": 3600000,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 1,
@@ -538,6 +538,7 @@
         "y": 10
       },
       "id": 3,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -558,9 +559,9 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "code",
+          "editorMode": "builder",
           "exemplar": false,
-          "expr": "histogram_quantile(0.99, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "p99",
@@ -792,6 +793,7 @@
         "y": 18
       },
       "id": 4,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -933,13 +935,13 @@
     ]
   },
   "time": {
-    "from": "now-12h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "API",
   "uid": "ad5z8t8",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }
