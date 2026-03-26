@@ -100,7 +100,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "(\n  sum(temporal_num_pollers{service_name=\"rag\"}) ==bool 0\n)\nor\n(\n  time() - max(timestamp(temporal_num_pollers{service_name=\"rag\"})) >bool 60\n)",
+          "expr": "max(\n  (sum(temporal_num_pollers{service_name=\"rag\"}) == bool 0)\n  or\n  (time() - max(timestamp(temporal_num_pollers{service_name=\"rag\"})) > bool 30)\n)",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -707,13 +707,13 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "RAG",
   "uid": "ta9lh6f",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }
