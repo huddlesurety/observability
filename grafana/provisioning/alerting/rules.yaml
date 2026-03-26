@@ -1,381 +1,838 @@
-apiVersion: 1
-groups:
-  - orgId: 1
-    name: Process
-    folder: API
-    interval: 1m
-    rules:
-      - uid: dfh7ka78e7apsb
-        title: Status
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: probe_success{deployment_environment="staging", service_name="API"}
-              instant: true
-              interval: ""
-              intervalMs: 15000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                    type: eq
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: ad5z8t8
-        panelId: 14
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: ad5z8t8
-          __panelId__: "14"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
-      - uid: ffh7ib0ty2y9se
-        title: Memory
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: sum(go_memory_used_bytes{service_name="API", deployment_environment="staging"})
-              instant: true
-              interval: ""
-              intervalMs: 15000
-              legendFormat: total
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 5e+08
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: ad5z8t8
-        panelId: 9
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: ad5z8t8
-          __panelId__: "9"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
-      - uid: afh7k289cnj0ge
-        title: CPU
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: sum(rate(process_cpu_time_seconds_total{service_name="API", deployment_environment="staging"}[$__rate_interval]))
-              instant: false
-              interval: ""
-              intervalMs: 15000
-              legendFormat: total
-              maxDataPoints: 43200
-              range: true
-              refId: A
-          - refId: reducer
-            queryType: expression
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0.1
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: avg
-                  type: query
-              datasource:
-                name: Expression
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              reducer: last
-              refId: reducer
-              type: reduce
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0.5
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: reducer
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: ad5z8t8
-        panelId: 6
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: ad5z8t8
-          __panelId__: "6"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
-  - orgId: 1
-    name: Process
-    folder: App
-    interval: 1m
-    rules:
-      - uid: cfh7m5d9fpvr4e
-        title: Status
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: probe_success{service_name="App", deployment_environment="staging"}
-              instant: true
-              interval: ""
-              intervalMs: 15000
-              legendFormat: __auto
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0
-                    type: eq
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: CiroMopVz
-        panelId: 38
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: CiroMopVz
-          __panelId__: "38"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
-      - uid: afh7mbs8p7i0wb
-        title: CPU
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: sum(process_cpu_utilization{service_name="App", deployment_environment="staging"})
-              instant: true
-              interval: ""
-              intervalMs: 15000
-              legendFormat: total
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 0.1
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: CiroMopVz
-        panelId: 39
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: CiroMopVz
-          __panelId__: "39"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
-      - uid: cfh7mfkz2483ke
-        title: Memory
-        condition: C
-        data:
-          - refId: A
-            relativeTimeRange:
-              from: 86400
-              to: 0
-            datasourceUid: grafana_prometheus
-            model:
-              datasource:
-                type: prometheus
-                uid: grafana_prometheus
-              editorMode: builder
-              expr: sum(process_memory_usage{service_name="App", deployment_environment="staging"})
-              instant: true
-              interval: ""
-              intervalMs: 15000
-              legendFormat: total
-              maxDataPoints: 43200
-              range: false
-              refId: A
-          - refId: C
-            datasourceUid: __expr__
-            model:
-              conditions:
-                - evaluator:
-                    params:
-                      - 5e+08
-                    type: gt
-                  operator:
-                    type: and
-                  query:
-                    params: []
-                  reducer:
-                    params: []
-                    type: last
-                  type: query
-              datasource:
-                type: __expr__
-                uid: __expr__
-              expression: A
-              intervalMs: 1000
-              maxDataPoints: 43200
-              refId: C
-              type: threshold
-        dashboardUid: CiroMopVz
-        panelId: 40
-        noDataState: NoData
-        execErrState: Error
-        for: 1m
-        annotations:
-          __dashboardUid__: CiroMopVz
-          __panelId__: "40"
-        isPaused: false
-        notification_settings:
-          receiver: Discord
+{
+  "apiVersion": 1,
+  "groups": [
+    {
+      "orgId": 1,
+      "name": "Process",
+      "folder": "RAG",
+      "interval": "1m",
+      "rules": [
+        {
+          "uid": "cfh7nrp0h9h4wa",
+          "title": "Status",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "code",
+                "expr": "temporal_worker_task_slots_used{service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", deployment_environment=\"staging\"} > bool 0",
+                "instant": false,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "__auto",
+                "maxDataPoints": 43200,
+                "range": true,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "B",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "reducer": "last",
+                "refId": "B",
+                "type": "reduce"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0],
+                      "type": "eq"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "B",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ta9lh6f",
+          "panelId": 12,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ta9lh6f",
+            "__panelId__": "12"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "cfh7nt7bkag3kf",
+          "title": "CPU",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "process_cpu_utilization_ratio{service_name=\"RAG\", deployment_environment=\"staging\"}",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.5],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ta9lh6f",
+          "panelId": 4,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ta9lh6f",
+            "__panelId__": "4"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "efh7nvc77accge",
+          "title": "Memory",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "process_memory_usage_bytes{service_name=\"RAG\", deployment_environment=\"staging\"}",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [500000000],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ta9lh6f",
+          "panelId": 5,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ta9lh6f",
+            "__panelId__": "5"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "Process",
+      "folder": "API",
+      "interval": "1m",
+      "rules": [
+        {
+          "uid": "dfh7ka78e7apsb",
+          "title": "Status",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "probe_success{deployment_environment=\"staging\", service_name=\"API\"}",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "__auto",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0],
+                      "type": "eq"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ad5z8t8",
+          "panelId": 14,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ad5z8t8",
+            "__panelId__": "14"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "ffh7ib0ty2y9se",
+          "title": "Memory",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "sum(go_memory_used_bytes{service_name=\"API\", deployment_environment=\"staging\"})",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [500000000],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ad5z8t8",
+          "panelId": 9,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ad5z8t8",
+            "__panelId__": "9"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "afh7k289cnj0ge",
+          "title": "CPU",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "sum(rate(process_cpu_time_seconds_total{service_name=\"API\", deployment_environment=\"staging\"}[$__rate_interval]))",
+                "instant": false,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": true,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "reducer",
+              "queryType": "expression",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.1],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "avg"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "name": "Expression",
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "reducer": "last",
+                "refId": "reducer",
+                "type": "reduce"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.5],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "reducer",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "ad5z8t8",
+          "panelId": 6,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "ad5z8t8",
+            "__panelId__": "6"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        }
+      ]
+    },
+    {
+      "orgId": 1,
+      "name": "Process",
+      "folder": "App",
+      "interval": "1m",
+      "rules": [
+        {
+          "uid": "cfh7m5d9fpvr4e",
+          "title": "Status",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "probe_success{service_name=\"App\", deployment_environment=\"staging\"}",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "__auto",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0],
+                      "type": "eq"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "CiroMopVz",
+          "panelId": 38,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "CiroMopVz",
+            "__panelId__": "38"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "afh7mbs8p7i0wb",
+          "title": "CPU",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "sum(process_cpu_utilization{service_name=\"App\", deployment_environment=\"staging\"})",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [0.1],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "CiroMopVz",
+          "panelId": 39,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "CiroMopVz",
+            "__panelId__": "39"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        },
+        {
+          "uid": "cfh7mfkz2483ke",
+          "title": "Memory",
+          "condition": "C",
+          "data": [
+            {
+              "refId": "A",
+              "relativeTimeRange": {
+                "from": 86400,
+                "to": 0
+              },
+              "datasourceUid": "grafana_prometheus",
+              "model": {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "grafana_prometheus"
+                },
+                "editorMode": "builder",
+                "expr": "sum(process_memory_usage{service_name=\"App\", deployment_environment=\"staging\"})",
+                "instant": true,
+                "interval": "",
+                "intervalMs": 15000,
+                "legendFormat": "total",
+                "maxDataPoints": 43200,
+                "range": false,
+                "refId": "A"
+              }
+            },
+            {
+              "refId": "C",
+              "relativeTimeRange": {
+                "from": 0,
+                "to": 0
+              },
+              "datasourceUid": "__expr__",
+              "model": {
+                "conditions": [
+                  {
+                    "evaluator": {
+                      "params": [500000000],
+                      "type": "gt"
+                    },
+                    "operator": {
+                      "type": "and"
+                    },
+                    "query": {
+                      "params": []
+                    },
+                    "reducer": {
+                      "params": [],
+                      "type": "last"
+                    },
+                    "type": "query"
+                  }
+                ],
+                "datasource": {
+                  "type": "__expr__",
+                  "uid": "__expr__"
+                },
+                "expression": "A",
+                "intervalMs": 1000,
+                "maxDataPoints": 43200,
+                "refId": "C",
+                "type": "threshold"
+              }
+            }
+          ],
+          "dashboardUid": "CiroMopVz",
+          "panelId": 40,
+          "noDataState": "NoData",
+          "execErrState": "Error",
+          "for": "1m",
+          "annotations": {
+            "__dashboardUid__": "CiroMopVz",
+            "__panelId__": "40"
+          },
+          "isPaused": false,
+          "notification_settings": {
+            "receiver": "Discord"
+          }
+        }
+      ]
+    }
+  ]
+}
