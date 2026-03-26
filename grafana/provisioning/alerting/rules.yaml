@@ -22,7 +22,7 @@ groups:
               expr: probe_success{service_name="App", deployment_environment="staging"}
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: __auto
               maxDataPoints: 43200
               range: false
@@ -47,7 +47,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -79,7 +79,7 @@ groups:
               expr: sum(process_cpu_utilization{service_name="App", deployment_environment="staging"})
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: false
@@ -104,7 +104,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -136,7 +136,7 @@ groups:
               expr: sum(process_memory_usage{service_name="App", deployment_environment="staging"})
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: false
@@ -161,7 +161,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -222,7 +222,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               reducer: last
               refId: reducer
@@ -247,7 +247,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: reducer
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -284,7 +284,7 @@ groups:
               expr: temporal_worker_task_slots_used{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="staging"} > bool 0
               instant: false
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: __auto
               maxDataPoints: 43200
               range: true
@@ -308,7 +308,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               reducer: last
               refId: B
@@ -333,7 +333,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: B
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -365,7 +365,7 @@ groups:
               expr: process_cpu_utilization_ratio{service_name="RAG", deployment_environment="staging"}
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: false
@@ -390,7 +390,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -422,7 +422,7 @@ groups:
               expr: process_memory_usage_bytes{service_name="RAG", deployment_environment="staging"}
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: false
@@ -447,7 +447,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -479,7 +479,7 @@ groups:
               expr: sum by(direction) (rate(system_network_io_bytes_total{service_name="RAG", deployment_environment="staging"}[$__rate_interval]))
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: __auto
               maxDataPoints: 43200
               range: false
@@ -504,7 +504,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -541,7 +541,7 @@ groups:
               expr: probe_success{deployment_environment="staging", service_name="API"}
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: __auto
               maxDataPoints: 43200
               range: false
@@ -566,7 +566,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -598,7 +598,7 @@ groups:
               expr: sum(go_memory_used_bytes{service_name="API", deployment_environment="staging"})
               instant: true
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: false
@@ -623,7 +623,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -655,7 +655,7 @@ groups:
               expr: sum(rate(process_cpu_time_seconds_total{service_name="API", deployment_environment="staging"}[$__rate_interval]))
               instant: false
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: total
               maxDataPoints: 43200
               range: true
@@ -682,7 +682,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               reducer: last
               refId: reducer
@@ -707,7 +707,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: reducer
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
@@ -740,7 +740,7 @@ groups:
               expr: sum by(network_io_direction) (rate(system_network_io_bytes_total{deployment_environment="staging", service_name="API"}[$__rate_interval]))
               instant: false
               interval: ""
-              intervalMs: 15000
+              intervalMs: 120000
               legendFormat: "{{network_io_direction}}"
               maxDataPoints: 43200
               range: true
@@ -764,7 +764,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: A
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               reducer: last
               refId: B
@@ -789,7 +789,7 @@ groups:
                 type: __expr__
                 uid: __expr__
               expression: B
-              intervalMs: 1000
+              intervalMs: 120000
               maxDataPoints: 43200
               refId: C
               type: threshold
