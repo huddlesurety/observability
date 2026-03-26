@@ -9,6 +9,4 @@ FROM grafana/grafana-oss:${VERSION}
 # Railway volumes mount as root-owned directories
 USER root
 
-COPY grafana.ini /etc/grafana/grafana.ini
-COPY datasources /etc/grafana/provisioning/datasources
-COPY dashboards /etc/grafana/provisioning/dashboards
+COPY . /etc/grafana
