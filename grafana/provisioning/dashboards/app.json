@@ -186,6 +186,7 @@
         "y": 1
       },
       "id": 39,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -281,6 +282,7 @@
         "y": 1
       },
       "id": 40,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -376,12 +378,13 @@
         "y": 1
       },
       "id": 42,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "hideZeros": false,
@@ -392,7 +395,7 @@
       "pluginVersion": "12.4.0",
       "targets": [
         {
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "rate(system_network_io_total{service_name=\"App\", deployment_environment=\"$environment\"}[$__rate_interval])",
           "legendFormat": "{{network_io_direction}}",
           "range": true,
@@ -2141,6 +2144,6 @@
   "timezone": "browser",
   "title": "App",
   "uid": "CiroMopVz",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }

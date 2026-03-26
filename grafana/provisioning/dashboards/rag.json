@@ -183,6 +183,7 @@
         "y": 1
       },
       "id": 4,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -278,6 +279,7 @@
         "y": 1
       },
       "id": 5,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -373,6 +375,7 @@
         "y": 1
       },
       "id": 6,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -1057,6 +1060,6 @@
   "timezone": "browser",
   "title": "RAG",
   "uid": "ta9lh6f",
-  "version": 4,
+  "version": 2,
   "weekStart": ""
 }

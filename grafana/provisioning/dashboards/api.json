@@ -177,6 +177,7 @@
         "y": 1
       },
       "id": 6,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -272,6 +273,7 @@
         "y": 1
       },
       "id": 9,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
@@ -367,6 +369,7 @@
         "y": 1
       },
       "id": 10,
+      "interval": "2m",
       "options": {
         "legend": {
           "calcs": [],
