@@ -1,0 +1,12 @@
+apiVersion: 1
+contactPoints:
+  - orgId: 1
+    name: Discord
+    receivers:
+      - uid: ffh7i1e1s20owa
+        type: discord
+        settings:
+          avatar_url: https://cdn.iconscout.com/icon/free/png-256/free-grafana-logo-icon-svg-download-png-2944910.png
+          url: https://discord.com/api/webhooks/1486799883632382153/DdqHZHT9-Oi1LbzrA8np5pG3PsSr24SaNseorW3C_GUKzf90pQAm4sh5Roqhf5MnMG9T
+          use_discord_username: false
+        disableResolveMessage: false
