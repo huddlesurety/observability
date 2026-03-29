@@ -755,7 +755,7 @@
         {
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "temporal_workflow_endtoend_latency_seconds_sum{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\"} / temporal_workflow_endtoend_latency_seconds_count{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\"}",
+          "expr": "temporal_workflow_endtoend_latency_seconds_sum{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\", namespace=\"$environment\"} / temporal_workflow_endtoend_latency_seconds_count{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\", namespace=\"$environment\"}",
           "instant": false,
           "legendFormat": "{{workflow_type}}",
           "range": true,
@@ -851,7 +851,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "rate(temporal_workflow_completed_total{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\"}[1m])",
+          "expr": "rate(temporal_workflow_completed_total{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"GenerateFieldWorkflow\", namespace=\"$environment\"}[1m])",
           "legendFormat": "{{workflow_type}}",
           "range": true,
           "refId": "A"
@@ -917,7 +917,7 @@
         {
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "temporal_workflow_endtoend_latency_seconds_sum{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\"} / temporal_workflow_endtoend_latency_seconds_count{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\"}",
+          "expr": "temporal_workflow_endtoend_latency_seconds_sum{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\", namespace=\"$environment\"} / temporal_workflow_endtoend_latency_seconds_count{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\", namespace=\"$environment\"}",
           "instant": false,
           "legendFormat": "{{workflow_type}}",
           "range": true,
@@ -1013,7 +1013,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "rate(temporal_workflow_completed_total{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\"}[1m])",
+          "expr": "rate(temporal_workflow_completed_total{service_name=\"RAG\", deployment_environment=\"$environment\", workflow_type=\"ParseDocumentWorkflow\", namespace=\"$environment\"}[1m])",
           "legendFormat": "{{workflow_type}}",
           "range": true,
           "refId": "A"
@@ -1030,8 +1030,8 @@
     "list": [
       {
         "current": {
-          "text": "staging",
-          "value": "staging"
+          "text": "production",
+          "value": "production"
         },
         "datasource": {
           "type": "prometheus",
