@@ -60,9 +60,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "38"
           summary: Service is down!
-        labels:
-          environment: staging
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -121,9 +118,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "39"
           summary: CPU is hot!
-        labels:
-          environment: staging
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -182,9 +176,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "40"
           summary: Memory is hot!
-        labels:
-          environment: staging
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -272,9 +263,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "42"
           summary: Network is hot!
-        labels:
-          environment: staging
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -338,9 +326,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "38"
           summary: Service is down!
-        labels:
-          environment: production
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -399,9 +384,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "39"
           summary: CPU is hot!
-        labels:
-          environment: production
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -460,9 +442,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "40"
           summary: Memory is hot!
-        labels:
-          environment: production
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -550,9 +529,6 @@ groups:
           __dashboardUid__: CiroMopVz
           __panelId__: "42"
           summary: Network is hot!
-        labels:
-          environment: production
-          service: App
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -616,9 +592,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "14"
           summary: Servie is down!
-        labels:
-          environment: staging
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -704,9 +677,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "6"
           summary: CPU is hot!
-        labels:
-          environment: staging
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -765,9 +735,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "9"
           summary: Memory is hot!
-        labels:
-          environment: staging
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -851,9 +818,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "10"
           summary: Network is hot!
-        labels:
-          environment: staging
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -917,9 +881,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "14"
           summary: Service is down!
-        labels:
-          environment: production
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1005,9 +966,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "6"
           summary: CPU is hot!
-        labels:
-          environment: production
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1066,9 +1024,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "9"
           summary: Memory is hot!
-        labels:
-          environment: production
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1152,9 +1107,6 @@ groups:
           __dashboardUid__: ad5z8t8
           __panelId__: "10"
           summary: Network is hot!
-        labels:
-          environment: production
-          service: API
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1242,9 +1194,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "12"
           summary: Service is down!
-        labels:
-          environment: staging
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1303,9 +1252,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "4"
           summary: CPU is hot!
-        labels:
-          environment: staging
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1364,9 +1310,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "5"
           summary: Memory is hot!
-        labels:
-          environment: staging
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1425,9 +1368,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "6"
           summary: Network is hot!
-        labels:
-          environment: staging
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1515,9 +1455,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "12"
           summary: Service is down!
-        labels:
-          environment: production
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1576,9 +1513,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "4"
           summary: CPU is hot!
-        labels:
-          environment: production
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1637,9 +1571,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "5"
           summary: Memory is hot!
-        labels:
-          environment: production
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
@@ -1698,9 +1629,6 @@ groups:
           __dashboardUid__: ta9lh6f
           __panelId__: "6"
           summary: Network is hot!
-        labels:
-          environment: production
-          service: RAG
         isPaused: false
         notification_settings:
           receiver: Discord
