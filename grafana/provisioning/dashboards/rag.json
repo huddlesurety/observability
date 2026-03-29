@@ -104,7 +104,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", deployment_environment=\"$environment\"} > bool 0",
+          "expr": "temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", deployment_environment=\"$environment\", namespace=\"$environment\"} > bool 0",
           "instant": false,
           "legendFormat": "__auto",
           "range": true,
