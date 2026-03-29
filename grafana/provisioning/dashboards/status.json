@@ -505,7 +505,7 @@
       "type": "status-history"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -584,7 +584,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"Website\"}",
+          "expr": "temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", worker_type=\"WorkflowWorker\"} > bool 0",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
@@ -647,7 +647,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(\n  (\n    temporal_worker_task_slots_used{service_name=\"RAG\", task_queue=\"rag\", deployment_environment=\"$environment\", worker_type=\"WorkflowWorker\"} > bool 0\n  )[$__range:]\n)",
+          "expr": "avg_over_time(temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", deployment_environment=\"$environment\", worker_type=\"WorkflowWorker\"}[$__range:]) > bool 0",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"
@@ -736,7 +736,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "temporal_worker_task_slots_used{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\"} > bool 0",
+          "expr": "temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\"} > bool 0",
           "legendFormat": "{{service_name}}",
           "range": true,
           "refId": "A"

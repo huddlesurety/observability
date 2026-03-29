@@ -281,7 +281,7 @@ groups:
                 type: prometheus
                 uid: grafana_prometheus
               editorMode: code
-              expr: temporal_worker_task_slots_used{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="staging"} > bool 0
+              expr: temporal_worker_task_slots_available{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="staging"} > bool 0
               instant: false
               interval: ""
               intervalMs: 120000
