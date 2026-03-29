@@ -10,5 +10,7 @@ sed -e "s|\${SCRAPE_INTERVAL}|${SCRAPE_INTERVAL}|g" \
 exec prometheus \
   --config.file=/etc/prometheus/config.yaml \
   --storage.tsdb.path=/prometheus \
+  --storage.tsdb.retention.time="${RETENTION_TIME}" \
+  --storage.tsdb.retention.size="${RETENTION_SIZE}" \
   --web.enable-remote-write-receiver \
   --web.listen-address="0.0.0.0:${PORT}"
