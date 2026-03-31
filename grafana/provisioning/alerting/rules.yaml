@@ -1283,7 +1283,7 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 5e+08
+                      - 1e+09
                     type: gt
                   operator:
                     type: and
@@ -1544,7 +1544,7 @@ groups:
               conditions:
                 - evaluator:
                     params:
-                      - 5e+08
+                      - 1e+09
                     type: gt
                   operator:
                     type: and
