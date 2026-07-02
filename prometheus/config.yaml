@@ -1,0 +1,12 @@
+# Template file — ${VAR} placeholders are substituted by entrypoint.sh via sed.
+# Prometheus does not support env var expansion natively (v3).
+
+global:
+  scrape_interval: ${SCRAPE_INTERVAL}
+  evaluation_interval: ${EVALUATION_INTERVAL}
+
+scrape_configs:
+  # Scrapes Prometheus itself
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]

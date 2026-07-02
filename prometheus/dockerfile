@@ -1,0 +1,18 @@
+# Prometheus v3 does NOT support env var expansion in config files.
+# entrypoint.sh uses sed to substitute ${VAR} placeholders in the .tmpl at startup.
+
+ARG VERSION=v3.5.1
+
+FROM prom/prometheus:${VERSION}
+
+# Railway volumes mount as root-owned directories
+USER root
+
+COPY config.yaml /etc/prometheus/config.yaml.tmpl
+COPY entrypoint.sh /entrypoint.sh
+
+ENV SCRAPE_INTERVAL=15s
+ENV EVALUATION_INTERVAL=15s
+ENV PORT=9090
+
+ENTRYPOINT ["/entrypoint.sh"]

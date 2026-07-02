@@ -1,0 +1,2294 @@
+apiVersion: 1
+groups:
+  - orgId: 1
+    name: staging
+    folder: App
+    interval: 1m
+    rules:
+      - uid: cfh7m5d9fpvr4e
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: probe_success{service_name="App", deployment_environment="staging"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 38
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "38"
+          summary: Service is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: afh7mbs8p7i0wb
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(process_cpu_utilization{service_name="App", deployment_environment="staging"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 39
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "39"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: cfh7mfkz2483ke
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(process_memory_usage{service_name="App", deployment_environment="staging"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5e+08
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 40
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "40"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: ffh7qtngw6epsb
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: code
+              exemplar: false
+              expr: rate(system_network_io_total{service_name="App", deployment_environment="staging"}[$__rate_interval])
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: "{{network_io_direction}}"
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: reducer
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reducer
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reducer
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 42
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "42"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+  - orgId: 1
+    name: production
+    folder: App
+    interval: 1m
+    rules:
+      - uid: afhfmnp2s29dsa
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: probe_success{service_name="App", deployment_environment="production"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 38
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "38"
+          summary: Service is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: ffhfmol5xltz4f
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(process_cpu_utilization{service_name="App", deployment_environment="production"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 39
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "39"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: cfhfmy7mb40sge
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(process_memory_usage{service_name="App", deployment_environment="production"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5e+08
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 40
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "40"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: efhfnap8tn0n4e
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              exemplar: false
+              expr: rate(system_network_io_total{service_name="App", deployment_environment="production"}[$__rate_interval])
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: "{{network_io_direction}}"
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: reducer
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                      - 0
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reducer
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reducer
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: CiroMopVz
+        panelId: 42
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: CiroMopVz
+          __panelId__: "42"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+  - orgId: 1
+    name: staging
+    folder: API
+    interval: 1m
+    rules:
+      - uid: dfh7ka78e7apsb
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: probe_success{deployment_environment="staging", service_name="API"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 14
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "14"
+          summary: Servie is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: afh7k289cnj0ge
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(rate(process_cpu_time_seconds_total{service_name="API", deployment_environment="staging"}[$__rate_interval]))
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: reducer
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reducer
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reducer
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 6
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "6"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: ffh7ib0ty2y9se
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(go_memory_used_bytes{service_name="API", deployment_environment="staging"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5e+08
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 9
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "9"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: ffh7o9gv8ewhsd
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              exemplar: false
+              expr: sum by(network_io_direction) (rate(system_network_io_bytes_total{deployment_environment="staging", service_name="API"}[$__rate_interval]))
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: "{{network_io_direction}}"
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 10
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "10"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+  - orgId: 1
+    name: production
+    folder: API
+    interval: 1m
+    rules:
+      - uid: efhfmgwxvtqtca
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: probe_success{deployment_environment="production", service_name="API"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 14
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "14"
+          summary: Service is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: dfhfmkfo8datcc
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(rate(process_cpu_time_seconds_total{service_name="API", deployment_environment="production"}[$__rate_interval]))
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: reducer
+            queryType: expression
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.1
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: avg
+                  type: query
+              datasource:
+                name: Expression
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: reducer
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: reducer
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 6
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "6"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: bfhfmiyyzzo5ca
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum(go_memory_used_bytes{service_name="API", deployment_environment="production"})
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 5e+08
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 9
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "9"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: efhfmlb47ury8c
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              exemplar: false
+              expr: sum by(network_io_direction) (rate(system_network_io_bytes_total{deployment_environment="production", service_name="API"}[$__rate_interval]))
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: "{{network_io_direction}}"
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ad5z8t8
+        panelId: 10
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ad5z8t8
+          __panelId__: "10"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+  - orgId: 1
+    name: staging
+    folder: RAG
+    interval: 1m
+    rules:
+      - uid: cfh7nrp0h9h4wa
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: code
+              expr: temporal_worker_task_slots_available{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="staging", namespace="staging"} > bool 0
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 12
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "12"
+          summary: Service is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: cfh7nt7bkag3kf
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: process_cpu_utilization_ratio{service_name="RAG", deployment_environment="staging"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 4
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "4"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: efh7nvc77accge
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: process_memory_usage_bytes{service_name="RAG", deployment_environment="staging"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1e+09
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 5
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "5"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: afh7of7vfzhtsc
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum by(direction) (rate(system_network_io_bytes_total{service_name="RAG", deployment_environment="staging"}[$__rate_interval]))
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 6
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "6"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+  - orgId: 1
+    name: production
+    folder: RAG
+    interval: 1m
+    rules:
+      - uid: afhfnczwhohkwe
+        title: Status
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: temporal_worker_task_slots_available{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="production", namespace="production"} > bool 0
+              instant: false
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: true
+              refId: A
+          - refId: B
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params: []
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0
+                    type: eq
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 12
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "12"
+          summary: Service is down!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: cfhfne08vhts0e
+        title: CPU
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: process_cpu_utilization_ratio{service_name="RAG", deployment_environment="staging"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 0.5
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 4
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "4"
+          summary: CPU is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: dfhfnfgqm6f40d
+        title: Memory
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: process_memory_usage_bytes{service_name="RAG", deployment_environment="production"}
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: total
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 1e+09
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 5
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "5"
+          summary: Memory is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+      - uid: cfhfngynyrhmoc
+        title: Network
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 86400
+              to: 0
+            datasourceUid: grafana_prometheus
+            model:
+              datasource:
+                type: prometheus
+                uid: grafana_prometheus
+              editorMode: builder
+              expr: sum by(direction) (rate(system_network_io_bytes_total{service_name="RAG", deployment_environment="production"}[$__rate_interval]))
+              instant: true
+              interval: ""
+              intervalMs: 120000
+              legendFormat: __auto
+              maxDataPoints: 43200
+              range: false
+              refId: A
+          - refId: C
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 500000
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params: []
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              intervalMs: 120000
+              maxDataPoints: 43200
+              refId: C
+              type: threshold
+        dashboardUid: ta9lh6f
+        panelId: 6
+        noDataState: NoData
+        execErrState: Error
+        for: 1m
+        annotations:
+          __dashboardUid__: ta9lh6f
+          __panelId__: "6"
+          summary: Network is hot!
+        isPaused: false
+        notification_settings:
+          receiver: Discord
+
+  # --- RAG pipeline alerts (spanmetrics + Temporal runtime metrics) ---
+  - orgId: 1
+    name: rag-staging
+    folder: RAG
+    interval: 1m
+    rules:
+    - uid: ragstgwferr
+      title: RAG Workflow Errors
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: 100 * sum(rate(traces_spanmetrics_calls_total{service_name="RAG", deployment_environment="staging", span_name=~"RunWorkflow:.+", status_code="STATUS_CODE_ERROR"}[10m])) / sum(rate(traces_spanmetrics_calls_total{service_name="RAG", deployment_environment="staging", span_name=~"RunWorkflow:.+"}[10m]))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 5
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 15m
+      annotations:
+        summary: More than 5% of RAG workflows are failing (staging). Check the Failures row on the RAG dashboard for the failing stage.
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragstggenp95
+      title: RAG GenerateField p95 near timeout
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_duration_seconds_bucket{service_name="RAG", deployment_environment="staging", span_name="RunWorkflow:GenerateFieldWorkflow"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 96
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "GenerateFieldWorkflow p95 exceeds 96s \u2014 80% of its 2m Temporal timeout (staging)."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragstgparsep95
+      title: RAG Parse p95 near timeout
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_duration_seconds_bucket{service_name="RAG", deployment_environment="staging", span_name="RunWorkflow:ParseDocumentWorkflow"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 480
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "ParseDocumentWorkflow p95 exceeds 480s \u2014 80% of its 10m Temporal timeout (staging)."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragstgqlag
+      title: RAG Queue Lag
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(temporal_activity_schedule_to_start_latency_seconds_bucket{service_name="RAG", deployment_environment="staging", namespace="staging"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 30
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "Activities are waiting >30s in the rag-tasks queue (staging) \u2014 worker saturated or down."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragstgdown
+      title: RAG Worker Down
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: absent(process_cpu_utilization_ratio{service_name="RAG", deployment_environment="staging"})
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 0
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: OK
+      execErrState: Error
+      for: 5m
+      annotations:
+        summary: "No metrics from the RAG worker for 5m (staging) \u2014 worker is down or cannot reach the collector."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragstgground
+      title: RAG Grounding Misses
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 3600
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: 100 * sum(increase(rag_grounding_misses_total{service_name="RAG", deployment_environment="staging"}[1h])) / sum(increase(rag_grounding_checks_total{service_name="RAG", deployment_environment="staging"}[1h]))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 20
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: OK
+      execErrState: Error
+      for: 5m
+      annotations:
+        summary: "Over 20% of generated answers failed source grounding in the last hour (staging) \u2014 extraction quality degraded."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+  - orgId: 1
+    name: rag-production
+    folder: RAG
+    interval: 1m
+    rules:
+    - uid: ragprdwferr
+      title: RAG Workflow Errors
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: 100 * sum(rate(traces_spanmetrics_calls_total{service_name="RAG", deployment_environment="production", span_name=~"RunWorkflow:.+", status_code="STATUS_CODE_ERROR"}[10m])) / sum(rate(traces_spanmetrics_calls_total{service_name="RAG", deployment_environment="production", span_name=~"RunWorkflow:.+"}[10m]))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 5
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 15m
+      annotations:
+        summary: More than 5% of RAG workflows are failing (production). Check the Failures row on the RAG dashboard for the failing stage.
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragprdgenp95
+      title: RAG GenerateField p95 near timeout
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_duration_seconds_bucket{service_name="RAG", deployment_environment="production", span_name="RunWorkflow:GenerateFieldWorkflow"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 96
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "GenerateFieldWorkflow p95 exceeds 96s \u2014 80% of its 2m Temporal timeout (production)."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragprdparsep95
+      title: RAG Parse p95 near timeout
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_duration_seconds_bucket{service_name="RAG", deployment_environment="production", span_name="RunWorkflow:ParseDocumentWorkflow"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 480
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "ParseDocumentWorkflow p95 exceeds 480s \u2014 80% of its 10m Temporal timeout (production)."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragprdqlag
+      title: RAG Queue Lag
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: histogram_quantile(0.95, sum by (le) (rate(temporal_activity_schedule_to_start_latency_seconds_bucket{service_name="RAG", deployment_environment="production", namespace="production"}[10m])))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 30
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: NoData
+      execErrState: Error
+      for: 10m
+      annotations:
+        summary: "Activities are waiting >30s in the rag-tasks queue (production) \u2014 worker saturated or down."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragprddown
+      title: RAG Worker Down
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 900
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: absent(process_cpu_utilization_ratio{service_name="RAG", deployment_environment="production"})
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 0
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: OK
+      execErrState: Error
+      for: 5m
+      annotations:
+        summary: "No metrics from the RAG worker for 5m (production) \u2014 worker is down or cannot reach the collector."
+      isPaused: false
+      notification_settings:
+        receiver: Discord
+    - uid: ragprdground
+      title: RAG Grounding Misses
+      condition: C
+      data:
+      - refId: A
+        relativeTimeRange:
+          from: 3600
+          to: 0
+        datasourceUid: grafana_prometheus
+        model:
+          datasource:
+            type: prometheus
+            uid: grafana_prometheus
+          editorMode: code
+          expr: 100 * sum(increase(rag_grounding_misses_total{service_name="RAG", deployment_environment="production"}[1h])) / sum(increase(rag_grounding_checks_total{service_name="RAG", deployment_environment="production"}[1h]))
+          instant: true
+          interval: ''
+          intervalMs: 60000
+          legendFormat: __auto
+          maxDataPoints: 43200
+          range: false
+          refId: A
+      - refId: C
+        datasourceUid: __expr__
+        model:
+          conditions:
+          - evaluator:
+              params:
+              - 20
+              type: gt
+            operator:
+              type: and
+            query:
+              params: []
+            reducer:
+              params: []
+              type: last
+            type: query
+          datasource:
+            type: __expr__
+            uid: __expr__
+          expression: A
+          intervalMs: 60000
+          maxDataPoints: 43200
+          refId: C
+          type: threshold
+      noDataState: OK
+      execErrState: Error
+      for: 5m
+      annotations:
+        summary: "Over 20% of generated answers failed source grounding in the last hour (production) \u2014 extraction quality degraded."
+      isPaused: false
+      notification_settings:
+        receiver: Discord

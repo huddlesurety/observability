@@ -1,0 +1,75 @@
+[env]
+_.file = [".env.local"]
+
+[tools]
+"aqua:docker/cli" = "latest"
+
+[tasks.run]
+description = "Start the full observability stack"
+run = "docker compose up"
+
+[tasks."run:grafana"]
+description = "Start only Grafana"
+run = "docker compose up grafana"
+
+[tasks."run:prometheus"]
+description = "Start only Prometheus"
+run = "docker compose up prometheus"
+
+[tasks."run:loki"]
+description = "Start only Loki"
+run = "docker compose up loki"
+
+[tasks."run:tempo"]
+description = "Start only Tempo"
+run = "docker compose up tempo"
+
+[tasks."run:alloy"]
+description = "Start only Alloy"
+run = "docker compose up alloy"
+
+[tasks.reset]
+description = "Wipe all local volumes and start the stack fresh"
+run = """
+  docker compose down -v
+  docker compose up --build
+"""
+
+[tasks."reset:grafana"]
+description = "Wipe Grafana volume and start fresh"
+run = """
+  docker compose stop grafana
+  docker compose rm -f -v grafana
+  docker volume rm observability_grafana_data || true
+"""
+
+[tasks."reset:prometheus"]
+description = "Wipe Prometheus volume and start fresh"
+run = """
+  docker compose stop prometheus
+  docker compose rm -f -v prometheus
+  docker volume rm observability_prometheus_data || true
+"""
+
+[tasks."reset:loki"]
+description = "Wipe Loki volume and start fresh"
+run = """
+  docker compose stop loki
+  docker compose rm -f -v loki
+  docker volume rm observability_loki_data || true
+"""
+
+[tasks."reset:tempo"]
+description = "Wipe Tempo volume and start fresh"
+run = """
+  docker compose stop tempo
+  docker compose rm -f -v tempo
+  docker volume rm observability_tempo_data || true
+"""
+
+[tasks."reset:alloy"]
+description = "Restart Alloy fresh (stateless)"
+run = """
+  docker compose stop alloy
+  docker compose rm -f -v alloy
+"""

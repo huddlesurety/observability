@@ -1,0 +1,97 @@
+# Railway template: import this file onto the Railway canvas to create all services.
+# All inter-service communication uses Railway private networking (*.railway.internal).
+
+services:
+  prometheus:
+    build:
+      context: ./prometheus
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${PROMETHEUS_VERSION:-v3.5.1}
+    volumes:
+      - prometheus_data:/prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:${PROMETHEUS_PORT:-9090}"
+    environment:
+      - SCRAPE_INTERVAL=${SCRAPE_INTERVAL:-15s}
+      - EVALUATION_INTERVAL=${EVALUATION_INTERVAL:-15s}
+      - PORT=${PROMETHEUS_PORT:-9090}
+      - RETENTION_TIME=${PROMETHEUS_RETENTION_TIME:-7d}
+      - RETENTION_SIZE=${PROMETHEUS_RETENTION_SIZE:-1GB}
+
+
+  tempo:
+    build:
+      context: ./tempo
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${TEMPO_VERSION:-2.10.0}
+    volumes:
+      - tempo_data:/var/tempo
+    ports:
+      - "${TEMPO_PORT:-3200}:${TEMPO_PORT:-3200}"
+    environment:
+      - PORT=${TEMPO_PORT:-3200}
+      - OTLP_HTTP_PORT=${TEMPO_OTLP_HTTP_PORT:-4318}
+
+  loki:
+    build:
+      context: ./loki
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${LOKI_VERSION:-3.6.5}
+    volumes:
+      - loki_data:/var/loki
+    ports:
+      - "${LOKI_PORT:-3100}:${LOKI_PORT:-3100}"
+    environment:
+      - PORT=${LOKI_PORT:-3100}
+
+  grafana:
+    build:
+      context: ./grafana
+      dockerfile: Dockerfile
+      args:
+        - VERSION=${GRAFANA_VERSION:-12.4.0}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # Mount dashboards for hot-reloading in local dev without rebuilding the image
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+    ports:
+      - "3001:${GRAFANA_PORT:-3000}"
+    environment:
+      - PROMETHEUS_HOST=${PROMETHEUS_HOST:-prometheus.railway.internal}
+      - PROMETHEUS_PORT=${PROMETHEUS_PORT:-9090}
+      - TEMPO_HOST=${TEMPO_HOST:-tempo.railway.internal}
+      - TEMPO_PORT=${TEMPO_PORT:-3200}
+      - LOKI_HOST=${LOKI_HOST:-loki.railway.internal}
+      - LOKI_PORT=${LOKI_PORT:-3100}
+      - ROOT_URL=${GRAFANA_ROOT_URL:-http://localhost:3001}
+      - AUTH_GOOGLE_CLIENT_ID=${GRAFANA_AUTH_GOOGLE_CLIENT_ID:-}
+      - AUTH_GOOGLE_CLIENT_SECRET=${GRAFANA_AUTH_GOOGLE_CLIENT_SECRET:-}
+      - AUTH_GOOGLE_ALLOWED_DOMAINS=${GRAFANA_AUTH_GOOGLE_ALLOWED_DOMAINS:-}
+      - AUTH_GOOGLE_ADMIN_EMAIL=${GRAFANA_AUTH_GOOGLE_ADMIN_EMAIL:-ethan@huddlesurety.co}
+      - DISCORD_AVATAR_URL=${DISCORD_AVATAR_URL:-}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
+
+  alloy:
+    build:
+      context: ./alloy
+      dockerfile: Dockerfile
+    ports:
+      - "${ALLOY_PORT:-12345}:${ALLOY_PORT:-12345}"
+      - "${ALLOY_OTLP_HTTP_PORT:-4318}:${ALLOY_OTLP_HTTP_PORT:-4318}"
+      - "${ALLOY_FARO_PORT:-12347}:${ALLOY_FARO_PORT:-12347}"
+    environment:
+      - PORT=${ALLOY_PORT:-12345}
+      - OTLP_HTTP_PORT=${ALLOY_OTLP_HTTP_PORT:-4318}
+      - FARO_PORT=${ALLOY_FARO_PORT:-12347}
+      - PROMETHEUS_ENDPOINT=${PROMETHEUS_ENDPOINT:-http://${PROMETHEUS_HOST:-prometheus.railway.internal}:9090/api/v1/write}
+      - TEMPO_ENDPOINT=${TEMPO_ENDPOINT:-http://${TEMPO_HOST:-tempo.railway.internal}:4318}
+      - LOKI_ENDPOINT=${LOKI_ENDPOINT:-http://${LOKI_HOST:-loki.railway.internal}:3100/loki/api/v1/push}
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  tempo_data:
+  loki_data:
