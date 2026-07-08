@@ -26,3 +26,37 @@ storage:
 compactor:
   compaction:
     compaction_window: 1h
+
+# Enable TraceQL metrics (count_over_time / quantile_over_time / rate, etc.) so
+# Grafana dashboards can aggregate over spans — e.g. workflows per org, activity
+# duration percentiles. Span-metrics and service-graph metrics are generated in
+# Alloy (see alloy/config.alloy) and remote-written to Prometheus, so here we
+# only enable the local-blocks processor, which powers TraceQL metrics from the
+# generator's local WAL (no remote_write needed for that path).
+metrics_generator:
+  storage:
+    # Required even for local-blocks-only: the generator needs a WAL directory.
+    path: /var/tempo/generator/wal
+    # No Prometheus remote_write: local-blocks serves TraceQL metrics from local
+    # blocks; Alloy owns the span-metrics/service-graph remote_write instead.
+    remote_write: []
+  processor:
+    local_blocks:
+      # Workflow/activity spans are not SERVER-kind; keep all spans so TraceQL
+      # metrics queries can match them (default drops non-server spans).
+      filter_server_spans: false
+      # Keep recent metrics data queryable without flushing to object storage
+      # (we run local single-binary; queries target recent data).
+      flush_to_storage: false
+
+overrides:
+  defaults:
+    metrics_generator:
+      processors:
+        - local-blocks
+
+# Allow the query path to serve TraceQL metrics queries.
+query_frontend:
+  metrics:
+    max_duration: 24h
+    concurrent_jobs: 8

@@ -18,6 +18,25 @@ datasources:
     orgId: 1
     uid: grafana_tempo
     url: http://${TEMPO_HOST}:${TEMPO_PORT}
+    jsonData:
+      httpMethod: GET
+      # Render the service graph (Explore → Tempo → Service Graph, and the
+      # dashboard node-graph panel) from the traces_service_graph_* metrics Alloy
+      # remote-writes to Prometheus.
+      serviceMap:
+        datasourceUid: grafana_prometheus
+      # Back the "Span metrics" tab with the same Prometheus, matching the
+      # traces_spanmetrics_* namespace produced by Alloy's spanmetrics connector.
+      tracesToMetrics:
+        datasourceUid: grafana_prometheus
+      # Enable node-graph rendering for the service map.
+      nodeGraph:
+        enabled: true
+      # Required for TraceQL metrics queries (rate/count_over_time/
+      # quantile_over_time) used by the Workflows dashboard to stream results.
+      streamingEnabled:
+        search: true
+        metrics: true
 
   - name: Loki
     type: loki

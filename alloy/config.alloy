@@ -11,7 +11,13 @@ otelcol.receiver.otlp "default" {
   output {
     metrics = [otelcol.processor.transform.add_resource_attributes.input]
     logs    = [otelcol.processor.batch.default.input]
-    traces  = [otelcol.processor.batch.default.input]
+    // Tee traces to Tempo (via batch) AND to the span-metrics / service-graph
+    // connectors that derive Prometheus metrics from spans.
+    traces  = [
+      otelcol.processor.batch.default.input,
+      otelcol.connector.spanmetrics.default.input,
+      otelcol.connector.servicegraph.default.input,
+    ]
   }
 }
 
@@ -21,10 +27,52 @@ faro.receiver "default" {
     listen_address = "0.0.0.0"
     cors_allowed_origins = ["*"]
   }
-  
+
   output {
     logs   = [loki.process.faro_logs.receiver]
-    traces = [otelcol.processor.batch.default.input]
+    traces = [
+      otelcol.processor.batch.default.input,
+      otelcol.connector.spanmetrics.default.input,
+      otelcol.connector.servicegraph.default.input,
+    ]
+  }
+}
+
+// Span metrics: derive RED-style request rate/error/duration metrics from spans,
+// with the span name as a dimension so dashboards can aggregate by operation
+// (e.g. per RunActivity:<name>). Emitted as OTLP metrics → Prometheus below.
+otelcol.connector.spanmetrics "default" {
+  // Emit calls_total and a duration histogram. Include span.name (the default
+  // "span.name" dimension is always present) plus org.id so we can slice by
+  // tenant, and span.kind to distinguish client/server edges.
+  dimension {
+    name = "org.id"
+  }
+  // CUMULATIVE so the Prometheus exporter emits monotonic counters (DELTA would
+  // need stateful conversion downstream).
+  aggregation_temporality = "CUMULATIVE"
+  histogram {
+    unit = "s"
+    explicit {
+      buckets = ["5ms", "25ms", "100ms", "250ms", "1s", "5s", "15s", "60s"]
+    }
+  }
+  // Namespace so metrics land as traces_spanmetrics_* (the naming Grafana's
+  // Tempo datasource span-metrics feature expects). span.name and span.kind are
+  // always-present default dimensions, so RunActivity:<name> is queryable.
+  namespace = "traces_spanmetrics"
+  metrics_flush_interval = "15s"
+  output {
+    metrics = [otelcol.processor.batch.default.input]
+  }
+}
+
+// Service graph: derive edge metrics (traces_service_graph_request_*) from
+// client/server span pairs so Grafana can render the service graph.
+otelcol.connector.servicegraph "default" {
+  dimensions = ["deployment.environment"]
+  output {
+    metrics = [otelcol.processor.batch.default.input]
   }
 }
 
