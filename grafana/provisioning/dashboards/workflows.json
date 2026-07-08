@@ -495,20 +495,23 @@
         "label": "Workflow",
         "type": "query",
         "datasource": {
-          "type": "prometheus",
-          "uid": "grafana_prometheus"
+          "type": "tempo",
+          "uid": "grafana_tempo"
         },
-        "definition": "label_values(traces_spanmetrics_calls_total{deployment_environment=\"$environment\"}, workflow_type)",
         "query": {
-          "qryType": 1,
-          "query": "label_values(traces_spanmetrics_calls_total{deployment_environment=\"$environment\"}, workflow_type)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+          "type": "tagValues",
+          "tag": "span.workflow.type",
+          "filters": [],
+          "refId": "workflow-tagvalues",
+          "query": "{ resource.service.name=\"RAG\" && resource.deployment.environment=\"$environment\" }"
         },
+        "definition": "span.workflow.type",
         "refresh": 2,
         "includeAll": true,
         "multi": true,
         "allValue": ".*",
         "regex": "",
+        "sort": 1,
         "current": {
           "text": [
             "All"
