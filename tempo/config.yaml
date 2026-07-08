@@ -35,11 +35,19 @@ compactor:
 # generator's local WAL (no remote_write needed for that path).
 metrics_generator:
   storage:
-    # Required even for local-blocks-only: the generator needs a WAL directory.
+    # Required even for local-blocks-only: the generator needs a WAL directory
+    # for its metrics registry.
     path: /var/tempo/generator/wal
     # No Prometheus remote_write: local-blocks serves TraceQL metrics from local
     # blocks; Alloy owns the span-metrics/service-graph remote_write instead.
     remote_write: []
+  # The local-blocks processor builds its own trace blocks (the data TraceQL
+  # metrics run against) and requires a dedicated traces WAL — distinct from the
+  # metrics-registry `storage.path` above and from the ingester `storage.trace.wal`.
+  # Without it the generator fails to start: "local blocks processor requires
+  # traces wal".
+  traces_storage:
+    path: /var/tempo/generator/traces
   processor:
     local_blocks:
       # Workflow/activity spans are not SERVER-kind; keep all spans so TraceQL
