@@ -246,152 +246,53 @@
       "type": "row"
     },
     {
+      "id": 5,
+      "type": "barchart",
+      "title": "Activity duration \u2014 $workflow",
       "datasource": {
         "type": "tempo",
         "uid": "grafana_tempo"
       },
-      "description": "Average duration of each RAG activity, across all workflows. Derived from RunActivity:<name> spans via avg_over_time(duration).",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "unit": "s"
-        },
-        "overrides": []
-      },
+      "description": "Average and p95 duration of each activity in this workflow, side by side. Bars are one workflow's activities (panel repeats per workflow).",
       "gridPos": {
         "h": 9,
-        "w": 12,
+        "w": 24,
         "x": 0,
         "y": 11
       },
-      "id": 5,
-      "options": {
-        "legend": {
-          "calcs": [
-            "mean",
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "grafana_tempo"
-          },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (span:name)",
-          "queryType": "traceql",
-          "refId": "A"
-        }
-      ],
-      "title": "Avg activity duration \u2014 $workflow",
-      "type": "timeseries",
       "repeat": "workflow",
-      "repeatDirection": "h"
-    },
-    {
-      "datasource": {
-        "type": "tempo",
-        "uid": "grafana_tempo"
-      },
-      "description": "p95 activity duration \u2014 tail latency per activity, complementing the average.",
+      "repeatDirection": "h",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
+            "fillOpacity": 80,
             "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
+            "lineWidth": 1,
+            "axisLabel": "",
             "thresholdsStyle": {
               "mode": "off"
             }
           },
-          "mappings": [],
-          "unit": "s"
+          "unit": "s",
+          "mappings": []
         },
         "overrides": []
       },
-      "gridPos": {
-        "h": 9,
-        "w": 12,
-        "x": 12,
-        "y": 11
-      },
-      "id": 6,
       "options": {
+        "orientation": "horizontal",
+        "xField": "span.name",
+        "showValue": "auto",
+        "stacking": "none",
+        "groupWidth": 0.7,
+        "barWidth": 0.9,
         "legend": {
-          "calcs": [
-            "max"
-          ],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
+          "showLegend": true,
+          "displayMode": "list",
+          "placement": "bottom"
         },
         "tooltip": {
           "mode": "multi",
@@ -404,15 +305,63 @@
             "type": "tempo",
             "uid": "grafana_tempo"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | quantile_over_time(duration, .95) by (span:name)",
+          "refId": "A",
           "queryType": "traceql",
-          "refId": "A"
+          "instant": true,
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (span:name)"
+        },
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "grafana_tempo"
+          },
+          "refId": "B",
+          "queryType": "traceql",
+          "instant": true,
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | quantile_over_time(duration, .95) by (span:name)"
         }
       ],
-      "title": "p95 activity duration \u2014 $workflow",
-      "type": "timeseries",
-      "repeat": "workflow",
-      "repeatDirection": "h"
+      "transformations": [
+        {
+          "id": "labelsToFields",
+          "options": {
+            "mode": "columns"
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "span.name",
+            "mode": "outer"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "renameByName": {
+              "Value #A": "avg",
+              "Value #B": "p95",
+              "span.name": "activity"
+            },
+            "excludeByName": {
+              "Time": true,
+              "Time 1": true,
+              "Time 2": true
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "sort": [
+              {
+                "field": "p95",
+                "desc": true
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "collapsed": false,
@@ -499,13 +448,11 @@
           "uid": "grafana_tempo"
         },
         "query": {
-          "type": "tagValues",
-          "tag": "span.workflow.type",
-          "filters": [],
-          "refId": "workflow-tagvalues",
-          "query": "{ resource.service.name=\"RAG\" && resource.deployment.environment=\"$environment\" }"
+          "type": 1,
+          "label": "span.workflow.type",
+          "refId": "workflow-tempo-var"
         },
-        "definition": "span.workflow.type",
+        "definition": "Workflow types (span.workflow.type)",
         "refresh": 2,
         "includeAll": true,
         "multi": true,
