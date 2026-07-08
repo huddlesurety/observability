@@ -1,0 +1,18 @@
+{
+  "extraKnownMarketplaces": {
+    "grafana-skills": {
+      "source": {
+        "source": "github",
+        "repo": "grafana/skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "grafana-core@grafana-skills": true,
+    "grafana-lgtm@grafana-skills": true,
+    "grafana-plugins@grafana-skills": true,
+    "grafana-app-sdk@grafana-skills": true,
+    "grafana-cloud@grafana-skills": true,
+    "grafana-k6@grafana-skills": true
+  }
+}
