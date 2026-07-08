@@ -107,6 +107,15 @@ otelcol.processor.transform "add_resource_attributes" {
     statements = [
       "set(attributes[\"service_name\"], resource.attributes[\"service.name\"])",
       "set(attributes[\"deployment_environment\"], resource.attributes[\"deployment.environment\"])",
+      // Give each replica a distinct series via an `instance` label. Without it,
+      // every replica of a service emits the SAME series identity
+      // ({service_name, deployment_environment}); with 2+ replicas Prometheus
+      // sees two values at one timestamp and rejects the whole batch with
+      // "duplicate sample for timestamp ...; overrides not allowed". api and rag
+      // set the standard service.instance.id; the app currently sets replica.id,
+      // so fall back to it when service.instance.id is absent.
+      "set(attributes[\"instance\"], resource.attributes[\"service.instance.id\"]) where resource.attributes[\"service.instance.id\"] != nil",
+      "set(attributes[\"instance\"], resource.attributes[\"replica.id\"]) where resource.attributes[\"service.instance.id\"] == nil and resource.attributes[\"replica.id\"] != nil",
     ]
   }
   output {
