@@ -449,10 +449,10 @@
         },
         "query": {
           "type": 1,
-          "label": "span.workflow.type",
+          "label": ".workflow.type",
           "refId": "workflow-tempo-var"
         },
-        "definition": "Workflow types (span.workflow.type)",
+        "definition": "Workflow types (.workflow.type)",
         "refresh": 2,
         "includeAll": true,
         "multi": true,
