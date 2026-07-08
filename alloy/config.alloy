@@ -48,6 +48,13 @@ otelcol.connector.spanmetrics "default" {
   dimension {
     name = "org.id"
   }
+  // Parent workflow type (stamped on RAG activity spans by the identity
+  // interceptor) so span-metrics — and dashboards built on them — can split
+  // activity rate/duration per workflow. Activities are shared across workflows,
+  // so span name alone can't attribute a duration to a workflow.
+  dimension {
+    name = "workflow.type"
+  }
   // CUMULATIVE so the Prometheus exporter emits monotonic counters (DELTA would
   // need stateful conversion downstream).
   aggregation_temporality = "CUMULATIVE"

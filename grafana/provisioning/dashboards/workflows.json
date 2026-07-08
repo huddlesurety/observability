@@ -320,13 +320,15 @@
             "type": "tempo",
             "uid": "grafana_tempo"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" } | avg_over_time(duration) by (span:name)",
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (span:name)",
           "queryType": "traceql",
           "refId": "A"
         }
       ],
-      "title": "Average activity duration (by activity)",
-      "type": "timeseries"
+      "title": "Avg activity duration \u2014 $workflow",
+      "type": "timeseries",
+      "repeat": "workflow",
+      "repeatDirection": "h"
     },
     {
       "datasource": {
@@ -402,13 +404,15 @@
             "type": "tempo",
             "uid": "grafana_tempo"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" } | quantile_over_time(duration, .95) by (span:name)",
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | quantile_over_time(duration, .95) by (span:name)",
           "queryType": "traceql",
           "refId": "A"
         }
       ],
-      "title": "p95 activity duration (by activity)",
-      "type": "timeseries"
+      "title": "p95 activity duration \u2014 $workflow",
+      "type": "timeseries",
+      "repeat": "workflow",
+      "repeatDirection": "h"
     },
     {
       "collapsed": false,
@@ -485,6 +489,35 @@
         "regex": "",
         "regexApplyTo": "value",
         "type": "query"
+      },
+      {
+        "name": "workflow",
+        "label": "Workflow",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "grafana_prometheus"
+        },
+        "definition": "label_values(traces_spanmetrics_calls_total{deployment_environment=\"$environment\"}, workflow_type)",
+        "query": {
+          "qryType": 1,
+          "query": "label_values(traces_spanmetrics_calls_total{deployment_environment=\"$environment\"}, workflow_type)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "includeAll": true,
+        "multi": true,
+        "allValue": ".*",
+        "regex": "",
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "options": []
       }
     ]
   },
