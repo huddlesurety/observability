@@ -78,6 +78,17 @@ otelcol.connector.spanmetrics "default" {
 // client/server span pairs so Grafana can render the service graph.
 otelcol.connector.servicegraph "default" {
   dimensions = ["deployment.environment"]
+  // A DB edge only forms for a client span carrying a "database name" attribute.
+  // The default list is just ["db.name"], but otelpgx (API→postgres) emits
+  // db.system + connection details, not the legacy db.name — so without this the
+  // pgx client spans weren't recognized as DB requests and folded into the
+  // generic "unknown" node. Accept the attributes otelpgx actually sets so the
+  // postgres node forms.
+  database_name_attributes = ["db.name", "db.namespace", "server.address", "db.system"]
+  // Label virtual (uninstrumented) nodes so e.g. the API→postgres edge and the
+  // "user" pseudo-node (API server spans with no paired client span) are
+  // identifiable rather than silently merged.
+  virtual_node_extra_label = true
   output {
     metrics = [otelcol.processor.batch.default.input]
   }
