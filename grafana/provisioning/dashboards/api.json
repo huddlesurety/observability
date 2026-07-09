@@ -859,54 +859,6 @@
       "type": "timeseries"
     },
     {
-      "datasource": {
-        "type": "loki",
-        "uid": "grafana_loki"
-      },
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 15,
-        "w": 24,
-        "x": 0,
-        "y": 26
-      },
-      "id": 5,
-      "options": {
-        "dedupStrategy": "none",
-        "detailsMode": "sidebar",
-        "enableInfiniteScrolling": true,
-        "enableLogDetails": true,
-        "fontSize": "default",
-        "showControls": false,
-        "showLabels": false,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "syntaxHighlighting": true,
-        "timestampResolution": "ms",
-        "unwrappedColumns": true,
-        "wrapLogMessage": false
-      },
-      "pluginVersion": "12.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "grafana_loki"
-          },
-          "direction": "backward",
-          "editorMode": "builder",
-          "expr": "{service_name=\"API\"} | json | resources_deployment_environment = `$environment` | line_format `{{.body}}`",
-          "queryType": "range",
-          "refId": "log"
-        }
-      ],
-      "title": "Logs",
-      "type": "logs"
-    },
-    {
       "id": 15,
       "type": "row",
       "title": "Tracing",
@@ -1224,7 +1176,7 @@
         "type": "tempo",
         "uid": "grafana_tempo"
       },
-      "description": "Recent API server traces, slowest first. Click a row to open the waterfall.",
+      "description": "Recent API server traces, slowest first. Click a row to open the waterfall. (Service/Name may show '<root span not yet received>' until the app-side root fix lands \u2014 the app span currently adopts the browser traceparent as parent.)",
       "gridPos": {
         "h": 10,
         "w": 24,
