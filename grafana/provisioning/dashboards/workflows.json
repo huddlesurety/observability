@@ -457,35 +457,37 @@
         "type": "query"
       },
       {
-        "name": "workflow",
-        "label": "Workflow",
-        "type": "query",
+        "allValue": ".*",
+        "current": {
+          "text": [
+            "GenerateFieldWorkflow",
+            "ParseDocumentWorkflow"
+          ],
+          "value": [
+            "GenerateFieldWorkflow",
+            "ParseDocumentWorkflow"
+          ]
+        },
         "datasource": {
           "type": "tempo",
           "uid": "grafana_tempo"
         },
+        "definition": "",
+        "includeAll": false,
+        "label": "Workflow",
+        "multi": true,
+        "name": "workflow",
+        "options": [],
         "query": {
           "label": "workflow.type",
           "refId": "TempoDatasourceVariableQueryEditor-VariableQuery",
           "type": 1
         },
-        "definition": "",
-        "includeAll": true,
-        "multi": true,
-        "allValue": ".*",
-        "current": {
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
-        },
-        "options": [],
         "refresh": 2,
         "regex": "",
         "regexApplyTo": "value",
-        "sort": 1
+        "sort": 1,
+        "type": "query"
       }
     ]
   },
