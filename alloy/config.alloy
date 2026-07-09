@@ -42,8 +42,15 @@ faro.receiver "default" {
 // with the span name as a dimension so dashboards can aggregate by operation
 // (e.g. per RunActivity:<name>). Emitted as OTLP metrics → Prometheus below.
 otelcol.connector.spanmetrics "default" {
-  // Extra dimensions beyond the connector's defaults (span name/kind/status are
-  // always emitted). org.id lets us slice by tenant.
+  // Extra dimensions beyond the connector's defaults (service.name, span
+  // name/kind/status are always emitted). deployment.environment (a resource
+  // attribute) becomes the deployment_environment label so dashboards can filter
+  // by $environment like every other panel — without it the span-metrics have no
+  // env label and env-scoped queries return nothing. org.id lets us slice by
+  // tenant.
+  dimension {
+    name = "deployment.environment"
+  }
   dimension {
     name = "org.id"
   }

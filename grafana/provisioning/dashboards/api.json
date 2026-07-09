@@ -1060,7 +1060,7 @@
         "type": "prometheus",
         "uid": "grafana_prometheus"
       },
-      "description": "p95 latency of DB queries (otelpgx client spans) by operation. Shows how much request time is spent in postgres.",
+      "description": "p95 latency of DB operations (otelpgx client spans: query/prepare/batch) by operation. Shows how much request time is spent in postgres. (otelpgx trims span names to the operation kind, not the SQL verb.)",
       "gridPos": {
         "h": 9,
         "w": 12,
@@ -1133,7 +1133,8 @@
           "editorMode": "code",
           "range": true,
           "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_duration_seconds_bucket{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_CLIENT\", span_name=~\"SELECT|INSERT|UPDATE|DELETE|BEGIN|COMMIT.*\"}[$__rate_interval])))",
-          "legendFormat": "{{span_name}}"
+          "legendFormat": "{{span_name}}",
+          "query": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_duration_seconds_bucket{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_CLIENT\", span_name=~\"query|prepare|batch\"}[$__rate_interval])))"
         }
       ]
     },
