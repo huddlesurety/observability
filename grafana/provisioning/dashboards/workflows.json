@@ -248,12 +248,12 @@
     {
       "id": 5,
       "type": "barchart",
-      "title": "Activity duration \u2014 $workflow",
+      "title": "Avg activity duration \u2014 $workflow",
       "datasource": {
         "type": "tempo",
         "uid": "grafana_tempo"
       },
-      "description": "Average and p95 duration of each activity in this workflow, side by side. Bars are one workflow's activities (panel repeats per workflow).",
+      "description": "Average duration of each activity across recent runs of this workflow, longest first. Aggregate/trend view; open a run in the Traces panel below for the parallel-aware waterfall.",
       "gridPos": {
         "h": 9,
         "w": 24,
@@ -284,19 +284,16 @@
       },
       "options": {
         "orientation": "horizontal",
-        "xField": "span.name",
         "showValue": "auto",
         "stacking": "none",
-        "groupWidth": 0.7,
-        "barWidth": 0.9,
         "legend": {
-          "showLegend": true,
+          "showLegend": false,
           "displayMode": "list",
           "placement": "bottom"
         },
         "tooltip": {
-          "mode": "multi",
-          "sort": "desc"
+          "mode": "single",
+          "sort": "none"
         }
       },
       "targets": [
@@ -307,47 +304,17 @@
           },
           "refId": "A",
           "queryType": "traceql",
-          "instant": true,
           "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (span:name)"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "grafana_tempo"
-          },
-          "refId": "B",
-          "queryType": "traceql",
-          "instant": true,
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | quantile_over_time(duration, .95) by (span:name)"
         }
       ],
       "transformations": [
         {
-          "id": "labelsToFields",
+          "id": "reduce",
           "options": {
-            "mode": "columns"
-          }
-        },
-        {
-          "id": "joinByField",
-          "options": {
-            "byField": "span.name",
-            "mode": "outer"
-          }
-        },
-        {
-          "id": "organize",
-          "options": {
-            "renameByName": {
-              "Value #A": "avg",
-              "Value #B": "p95",
-              "span.name": "activity"
-            },
-            "excludeByName": {
-              "Time": true,
-              "Time 1": true,
-              "Time 2": true
-            }
+            "reducers": [
+              "mean"
+            ],
+            "mode": "seriesToRows"
           }
         },
         {
@@ -355,7 +322,7 @@
           "options": {
             "sort": [
               {
-                "field": "p95",
+                "field": "Mean",
                 "desc": true
               }
             ]
