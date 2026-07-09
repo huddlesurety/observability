@@ -364,12 +364,48 @@
       ]
     },
     {
+      "id": 9,
+      "type": "traces",
+      "title": "Recent $workflow runs \u2014 click a row for the waterfall (parallelism + per-activity duration)",
+      "datasource": {
+        "type": "tempo",
+        "uid": "grafana_tempo"
+      },
+      "description": "Per-execution trace list for the selected workflow, slowest first. Click a trace to expand the waterfall: bar length = activity duration, bar offset = start time, so parallel activities show as overlapping bars. This is the honest per-run view (the aggregate bar panels can't show parallelism).",
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "repeat": "workflow",
+      "repeatDirection": "h",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {},
+      "targets": [
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "grafana_tempo"
+          },
+          "refId": "A",
+          "queryType": "traceql",
+          "tableType": "traces",
+          "limit": 20,
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" && span.workflow.type = \"$workflow\" }"
+        }
+      ]
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 32
       },
       "id": 7,
       "panels": [],
@@ -390,7 +426,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 21
+        "y": 33
       },
       "id": 8,
       "options": {},
