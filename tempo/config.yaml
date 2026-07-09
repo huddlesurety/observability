@@ -27,34 +27,24 @@ compactor:
   compaction:
     compaction_window: 1h
 
-# Enable TraceQL metrics (count_over_time / quantile_over_time / rate, etc.) so
-# Grafana dashboards can aggregate over spans — e.g. workflows per org, activity
-# duration percentiles. Span-metrics and service-graph metrics are generated in
-# Alloy (see alloy/config.alloy) and remote-written to Prometheus, so here we
-# only enable the local-blocks processor, which powers TraceQL metrics from the
-# generator's local WAL (no remote_write needed for that path).
+# Enable the local-blocks processor, which powers TraceQL metrics
+# (count_over_time / quantile_over_time / rate) used by the dashboards.
+# Span-metrics and service-graph metrics are generated in Alloy and
+# remote-written to Prometheus, so no remote_write is needed here.
 metrics_generator:
   storage:
-    # Required even for local-blocks-only: the generator needs a WAL directory
-    # for its metrics registry.
-    path: /var/tempo/generator/wal
-    # No Prometheus remote_write: local-blocks serves TraceQL metrics from local
-    # blocks; Alloy owns the span-metrics/service-graph remote_write instead.
-    remote_write: []
-  # The local-blocks processor builds its own trace blocks (the data TraceQL
-  # metrics run against) and requires a dedicated traces WAL — distinct from the
-  # metrics-registry `storage.path` above and from the ingester `storage.trace.wal`.
-  # Without it the generator fails to start: "local blocks processor requires
-  # traces wal".
+    path: /var/tempo/generator/wal # metrics-registry WAL (required even unused)
+    remote_write: [] # Alloy owns span-metrics/service-graph remote_write
+  # local-blocks builds its own trace blocks and needs a dedicated traces WAL,
+  # distinct from storage.path and the ingester storage.trace.wal. Without it the
+  # generator crash-loops: "local blocks processor requires traces wal".
   traces_storage:
     path: /var/tempo/generator/traces
   processor:
     local_blocks:
-      # Workflow/activity spans are not SERVER-kind; keep all spans so TraceQL
-      # metrics queries can match them (default drops non-server spans).
+      # Keep non-SERVER spans (workflow/activity spans aren't SERVER-kind) so
+      # TraceQL metrics can match them; default would drop them.
       filter_server_spans: false
-      # Keep recent metrics data queryable without flushing to object storage
-      # (we run local single-binary; queries target recent data).
       flush_to_storage: false
 
 overrides:

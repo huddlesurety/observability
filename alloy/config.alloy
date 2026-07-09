@@ -42,9 +42,8 @@ faro.receiver "default" {
 // with the span name as a dimension so dashboards can aggregate by operation
 // (e.g. per RunActivity:<name>). Emitted as OTLP metrics → Prometheus below.
 otelcol.connector.spanmetrics "default" {
-  // Emit calls_total and a duration histogram. Include span.name (the default
-  // "span.name" dimension is always present) plus org.id so we can slice by
-  // tenant, and span.kind to distinguish client/server edges.
+  // Extra dimensions beyond the connector's defaults (span name/kind/status are
+  // always emitted). org.id lets us slice by tenant.
   dimension {
     name = "org.id"
   }
