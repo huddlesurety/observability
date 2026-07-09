@@ -332,8 +332,8 @@
     },
     {
       "id": 9,
-      "type": "traces",
-      "title": "Recent $workflow runs \u2014 click a row for the waterfall (parallelism + per-activity duration)",
+      "type": "table",
+      "title": "Recent $workflow runs \u2014 click a trace to open its waterfall",
       "datasource": {
         "type": "tempo",
         "uid": "grafana_tempo"
@@ -348,10 +348,24 @@
       "repeat": "workflow",
       "repeatDirection": "h",
       "fieldConfig": {
-        "defaults": {},
+        "defaults": {
+          "custom": {
+            "filterable": true
+          }
+        },
         "overrides": []
       },
-      "options": {},
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false,
+          "reducer": [
+            "sum"
+          ],
+          "fields": ""
+        }
+      },
       "targets": [
         {
           "datasource": {
@@ -362,7 +376,8 @@
           "queryType": "traceql",
           "tableType": "traces",
           "limit": 20,
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" && span.workflow.type = \"$workflow\" }"
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" && span.workflow.type = \"$workflow\" }",
+          "filters": []
         }
       ]
     },
