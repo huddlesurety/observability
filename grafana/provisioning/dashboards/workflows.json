@@ -109,12 +109,12 @@
             "type": "tempo",
             "uid": "grafana_tempo"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" } | rate() by (span:name, span.org.id)",
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunWorkflow:.*\" } | rate() by (name)",
           "queryType": "traceql",
           "refId": "A"
         }
       ],
-      "title": "Workflow rate by kind & org",
+      "title": "Workflow rate by kind",
       "type": "timeseries"
     },
     {
@@ -202,12 +202,12 @@
             "type": "tempo",
             "uid": "grafana_tempo"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" } | count_over_time() by (span:name, span.org.id)",
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunWorkflow:.*\" } | count_over_time() by (name)",
           "queryType": "traceql",
           "refId": "A"
         }
       ],
-      "title": "Workflow count by kind & org",
+      "title": "Workflow count by kind",
       "transformations": [
         {
           "id": "reduce",
@@ -224,7 +224,6 @@
             "excludeByName": {},
             "renameByName": {
               "span.name": "Workflow",
-              "span.org.id": "Org",
               "Total": "Workflows"
             }
           }
@@ -304,7 +303,7 @@
           },
           "refId": "A",
           "queryType": "traceql",
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (span:name)"
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (name)"
         }
       ],
       "transformations": [
@@ -376,7 +375,7 @@
           "queryType": "traceql",
           "tableType": "traces",
           "limit": 20,
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && span:name =~ \"RunWorkflow:.*\" && span.workflow.type = \"$workflow\" }",
+          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name = \"RunWorkflow:$workflow\" }",
           "filters": []
         }
       ]
