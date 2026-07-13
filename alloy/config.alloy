@@ -222,6 +222,18 @@ modules:
     address = "https://api.huddlesurety.co/"
     module  = "http_2xx"
   }
+
+  target {
+    name    = "App-development"
+    address = "https://app.development.huddlesurety.co/api/health"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "API-development"
+    address = "https://api.development.huddlesurety.co/"
+    module  = "http_2xx"
+  }
 }
 
 discovery.relabel "blackbox" {

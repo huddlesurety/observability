@@ -103,11 +103,11 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "builder",
-          "expr": "temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", deployment_environment=\"$environment\", namespace=\"$environment\"} > bool 0",
-          "instant": false,
+          "editorMode": "code",
+          "expr": "(max(temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", deployment_environment=\"$environment\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "instant": true,
           "legendFormat": "__auto",
-          "range": true,
+          "range": false,
           "refId": "A"
         }
       ],
