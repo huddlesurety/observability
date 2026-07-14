@@ -700,10 +700,10 @@
     },
     {
       "datasource": {
-        "type": "tempo",
-        "uid": "grafana_tempo"
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
       },
-      "description": "Rate of workflow executions, split by workflow kind and requesting org. Derived from RunWorkflow:<kind> spans via TraceQL metrics.",
+      "description": "Rate of workflow executions, split by workflow kind. Derived from RunWorkflow:<kind> span metrics (Prometheus), so any time range works.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -769,11 +769,13 @@
       "targets": [
         {
           "datasource": {
-            "type": "tempo",
-            "uid": "grafana_tempo"
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunWorkflow:.*\" } | rate() by (name)",
-          "queryType": "traceql",
+          "editorMode": "code",
+          "expr": "sum by (span_name) (rate(traces_spanmetrics_calls_total{service_name=\"RAG\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__rate_interval]))",
+          "legendFormat": "{{span_name}}",
+          "range": true,
           "refId": "A"
         }
       ],
@@ -782,10 +784,10 @@
     },
     {
       "datasource": {
-        "type": "tempo",
-        "uid": "grafana_tempo"
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
       },
-      "description": "Total workflow executions in the selected range, broken down by workflow kind and org. Derived from RunWorkflow:<kind> spans.",
+      "description": "Total workflow executions in the selected range, broken down by workflow kind. Derived from RunWorkflow:<kind> span metrics (Prometheus).",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -808,7 +810,8 @@
                 "value": null
               }
             ]
-          }
+          },
+          "decimals": 0
         },
         "overrides": [
           {
@@ -862,32 +865,28 @@
       "targets": [
         {
           "datasource": {
-            "type": "tempo",
-            "uid": "grafana_tempo"
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
           },
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunWorkflow:.*\" } | count_over_time() by (name)",
-          "queryType": "traceql",
+          "editorMode": "code",
+          "expr": "sum by (span_name) (increase(traces_spanmetrics_calls_total{service_name=\"RAG\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "range": false,
+          "legendFormat": "__auto",
           "refId": "A"
         }
       ],
       "title": "Workflow count by kind",
       "transformations": [
         {
-          "id": "reduce",
-          "options": {
-            "labelsToFields": true,
-            "reducers": [
-              "sum"
-            ]
-          }
-        },
-        {
           "id": "organize",
           "options": {
-            "excludeByName": {},
+            "excludeByName": {
+              "Time": true
+            },
             "renameByName": {
-              "span.name": "Workflow",
-              "Total": "Workflows"
+              "span_name": "Workflow"
             }
           }
         }
@@ -912,10 +911,10 @@
       "type": "barchart",
       "title": "Avg activity duration \u2014 $workflow",
       "datasource": {
-        "type": "tempo",
-        "uid": "grafana_tempo"
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
       },
-      "description": "Average duration of each activity across recent runs of this workflow, longest first. Aggregate/trend view; open a run in the Traces panel below for the parallel-aware waterfall.",
+      "description": "Average duration of each activity across runs of this workflow in the selected range, longest first. Derived from span metrics (Prometheus); open a run in the Traces panel below for the parallel-aware waterfall.",
       "gridPos": {
         "h": 9,
         "w": 24,
@@ -961,22 +960,29 @@
       "targets": [
         {
           "datasource": {
-            "type": "tempo",
-            "uid": "grafana_tempo"
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
           },
-          "refId": "A",
-          "queryType": "traceql",
-          "query": "{ resource.service.name = \"RAG\" && resource.deployment.environment = \"$environment\" && name =~ \"RunActivity:.*\" && span.workflow.type = \"$workflow\" } | avg_over_time(duration) by (name)"
+          "editorMode": "code",
+          "expr": "sum by (span_name) (increase(traces_spanmetrics_duration_seconds_sum{service_name=\"RAG\", deployment_environment=\"$environment\", span_name=~\"RunActivity:.*\", workflow_type=\"$workflow\"}[$__range]))\n/\nsum by (span_name) (increase(traces_spanmetrics_duration_seconds_count{service_name=\"RAG\", deployment_environment=\"$environment\", span_name=~\"RunActivity:.*\", workflow_type=\"$workflow\"}[$__range]))",
+          "format": "table",
+          "instant": true,
+          "range": false,
+          "legendFormat": "__auto",
+          "refId": "A"
         }
       ],
       "transformations": [
         {
-          "id": "reduce",
+          "id": "organize",
           "options": {
-            "reducers": [
-              "mean"
-            ],
-            "mode": "seriesToRows"
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "span_name": "Activity",
+              "Value": "Avg duration"
+            }
           }
         },
         {
@@ -984,7 +990,7 @@
           "options": {
             "sort": [
               {
-                "field": "Mean",
+                "field": "Avg duration",
                 "desc": true
               }
             ]
@@ -1076,11 +1082,15 @@
         "current": {
           "text": [
             "GenerateFieldWorkflow",
-            "ParseDocumentWorkflow"
+            "ParseDocumentWorkflow",
+            "FillBondWorkflow",
+            "FindBondWorkflow"
           ],
           "value": [
             "GenerateFieldWorkflow",
-            "ParseDocumentWorkflow"
+            "ParseDocumentWorkflow",
+            "FillBondWorkflow",
+            "FindBondWorkflow"
           ]
         },
         "datasource": {
