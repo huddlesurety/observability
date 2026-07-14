@@ -1782,16 +1782,12 @@
         "type": "query"
       },
       {
-        "allValue": ".*",
-        "current": {
-          "text": "All",
-          "value": "$__all"
-        },
+        "current": {},
         "datasource": {
           "type": "prometheus",
           "uid": "grafana_prometheus"
         },
-        "includeAll": true,
+        "includeAll": false,
         "label": "Org",
         "multi": true,
         "name": "org_id",

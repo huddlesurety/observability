@@ -86,7 +86,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -98,10 +100,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"App\"}",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"})) or vector(0)",
+          "legendFormat": "App",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Status",
@@ -148,7 +151,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -160,10 +165,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}[$__range])",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"}))[$__range:])",
+          "legendFormat": "App",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Uptime Ratio",
@@ -249,8 +255,8 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"App\"}",
-          "legendFormat": "{{service_name}}",
+          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"})",
+          "legendFormat": "App",
           "range": true,
           "refId": "A"
         }
@@ -324,7 +330,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -336,10 +344,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"API\"}",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"})) or vector(0)",
+          "legendFormat": "API",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Status",
@@ -386,7 +395,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "inverted",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -398,10 +409,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}[$__range])",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}))[$__range:])",
+          "legendFormat": "API",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Uptime Ratio",
@@ -487,8 +499,8 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "probe_success{deployment_environment=\"$environment\", service_name=\"API\"}",
-          "legendFormat": "{{service_name}}",
+          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"})",
+          "legendFormat": "API",
           "range": true,
           "refId": "A"
         }
@@ -562,7 +574,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "standard",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -574,10 +588,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"} > bool 0",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "(max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "legendFormat": "RAG",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Status",
@@ -623,7 +638,9 @@
         "orientation": "horizontal",
         "percentChangeColorMode": "inverted",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
@@ -635,10 +652,11 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time(temporal_worker_task_slots_available{service_name=\"RAG\", task_queue=\"rag\", deployment_environment=\"$environment\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}[$__range:]) > bool 0",
-          "legendFormat": "{{service_name}}",
-          "range": true,
-          "refId": "A"
+          "expr": "avg_over_time((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0)[$__range:])",
+          "legendFormat": "RAG",
+          "range": false,
+          "refId": "A",
+          "instant": true
         }
       ],
       "title": "Uptime Ratio",
@@ -724,8 +742,251 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"} > bool 0",
-          "legendFormat": "{{service_name}}",
+          "expr": "max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0",
+          "legendFormat": "RAG",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Status",
+      "type": "status-history"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "id": 23,
+      "panels": [],
+      "title": "Notification",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 16
+      },
+      "id": 24,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "expr": "(max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "legendFormat": "Notification",
+          "range": false,
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "title": "Status",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 2,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 16
+      },
+      "id": 25,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "horizontal",
+        "percentChangeColorMode": "inverted",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "editorMode": "builder",
+          "expr": "avg_over_time((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0)[$__range:])",
+          "legendFormat": "Notification",
+          "range": false,
+          "refId": "A",
+          "instant": true
+        }
+      ],
+      "title": "Uptime Ratio",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "axisPlacement": "hidden",
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "red",
+                  "index": 0,
+                  "text": "DOWN"
+                },
+                "1": {
+                  "color": "green",
+                  "index": 1,
+                  "text": "UP"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 16,
+        "x": 8,
+        "y": 16
+      },
+      "id": 26,
+      "maxDataPoints": 120,
+      "options": {
+        "colWidth": 0.9,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "rowHeight": 0.98,
+        "showValue": "never",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "grafana_prometheus"
+          },
+          "editorMode": "builder",
+          "expr": "max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0",
+          "legendFormat": "Notification",
           "range": true,
           "refId": "A"
         }
