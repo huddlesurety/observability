@@ -403,16 +403,16 @@
       "type": "timeseries"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
         "y": 9
       },
-      "id": 8,
+      "id": 30,
       "panels": [],
-      "title": "Tokens",
+      "title": "LLM usage & cost",
       "type": "row"
     },
     {
@@ -423,15 +423,273 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "fixedColor": "text",
+            "mode": "fixed"
           },
-          "decimals": 2,
+          "decimals": 3,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 0,
+        "y": 10
+      },
+      "id": 105,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum(max_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[$__range])) - (sum(min_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[$__range]) and last_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[1d] offset $__range)) or vector(0))",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Total cost (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "description": "Chat + VLM + embedding requests \u2014 matches the provider's request count.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 6,
+        "y": 10
+      },
+      "id": 106,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum(max_over_time(rag_llm_call_duration_seconds_count{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[$__range])) - (sum(min_over_time(rag_llm_call_duration_seconds_count{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[$__range]) and last_over_time(rag_llm_call_duration_seconds_count{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[1d] offset $__range)) or vector(0))",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Model API calls (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "text",
+            "mode": "fixed"
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 12,
+        "y": 10
+      },
+      "id": 107,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(rag_llm_call_duration_seconds_bucket{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[$__range])))",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "p95 call latency (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "description": "Non-zero means a model is missing from app/o11y/cost.py MODEL_PRICES \u2014 spend is being under-counted.",
+      "fieldConfig": {
+        "defaults": {
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 6,
+        "x": 18,
+        "y": 10
+      },
+      "id": 108,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "count(sum by (model) (increase(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", unpriced=\"true\"}[$__range]) > 0)) or vector(0)",
+          "instant": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Unpriced cost points (range)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "decimals": 4,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
                 "value": 0
               }
             ]
@@ -441,28 +699,35 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 10
+        "y": 15
       },
-      "id": 11,
+      "id": 109,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "same_as_value",
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
       },
       "pluginVersion": "12.4.0",
       "targets": [
@@ -471,17 +736,14 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "builder",
-          "exemplar": false,
-          "expr": "(sum(increase(llm_input_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range])) / 1000000 * 0.3) + (sum(increase(llm_output_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range])) / 1000000 * 2.5) + (sum(increase(embedding_input_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range])) / 1000000 * 0.15)",
+          "expr": "sum by (model) (max_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[$__range])) - (sum by (model) (min_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[$__range]) and last_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[1d] offset $__range)) or sum by (model) (max_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[$__range])) * 0)",
           "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
+          "legendFormat": "{{model}}",
           "refId": "A"
         }
       ],
-      "title": "Total Cost",
-      "type": "stat"
+      "title": "Cost by model (range total)",
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -491,112 +753,53 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
+          "decimals": 4,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "green",
                 "value": 0
               }
             ]
           },
-          "unit": "short"
+          "unit": "currencyUSD"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 10
-      },
-      "id": 1,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "same_as_value",
-        "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "grafana_prometheus"
-          },
-          "editorMode": "builder",
-          "exemplar": false,
-          "expr": "sum(increase(llm_input_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range]))",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "A"
-        }
-      ],
-      "title": "Generation (Input)",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "grafana_prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
+        "h": 8,
+        "w": 12,
         "x": 12,
-        "y": 10
+        "y": 15
       },
-      "id": 9,
+      "id": 110,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
+        "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
+        "minVizHeight": 16,
+        "minVizWidth": 8,
+        "namePlacement": "auto",
+        "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
-            "sum"
+            "lastNotNull"
           ],
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "showUnfilled": true,
+        "sizing": "auto",
+        "valueMode": "color"
       },
       "pluginVersion": "12.4.0",
       "targets": [
@@ -605,17 +808,14 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "builder",
-          "exemplar": false,
-          "expr": "sum(increase(llm_output_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range]))",
+          "expr": "sum by (workflow) (max_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\"}[$__range])) - (sum by (workflow) (min_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\"}[$__range]) and last_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\"}[1d] offset $__range)) or sum by (workflow) (max_over_time(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\"}[$__range])) * 0)",
           "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
+          "legendFormat": "{{workflow}}",
           "refId": "A"
         }
       ],
-      "title": "Generation (Output)",
-      "type": "stat"
+      "title": "Cost by workflow (range total)",
+      "type": "bargauge"
     },
     {
       "datasource": {
@@ -625,15 +825,53 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "text",
+                "color": "green",
                 "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
               }
             ]
           },
@@ -642,28 +880,499 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 18,
-        "y": 10
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 23
       },
-      "id": 10,
+      "id": 111,
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "sum"
-          ],
-          "fields": "",
-          "values": false
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum by (activity) (increase(rag_llm_input_tokens_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[5m]))",
+          "legendFormat": "{{activity}}",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (activity) (increase(rag_embedding_input_tokens_total{deployment_environment=~\"$environment\", org_id=~\"$org_id\", workflow=~\"$workflow\"}[5m]))",
+          "legendFormat": "{{activity}} (embed)",
+          "refId": "B"
+        }
+      ],
+      "title": "Input tokens by activity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "description": "increase(tokens) / increase(call count) over each interval \u2014 catches prompt-size regressions.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 23
+      },
+      "id": 112,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum by (activity) (increase(rag_llm_input_tokens_total{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[5m])) / sum by (activity) (increase(rag_llm_call_duration_seconds_count{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[5m]))",
+          "legendFormat": "{{activity}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Avg input tokens per call, by activity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "id": 113,
+      "options": {
+        "legend": {
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, activity) (rate(rag_llm_call_duration_seconds_bucket{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[5m])))",
+          "legendFormat": "{{activity}}",
+          "refId": "A"
+        }
+      ],
+      "title": "p95 call latency by activity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "cps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 114,
+      "options": {
+        "legend": {
+          "calcs": [
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum by (activity) (rate(rag_llm_call_duration_seconds_count{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[5m]))",
+          "legendFormat": "{{activity}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Call rate by activity",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 115,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.4.0",
+      "targets": [
+        {
+          "expr": "sum by (org_id) (increase(rag_llm_cost_USD_total{deployment_environment=~\"$environment\", workflow=~\"$workflow\"}[5m]))",
+          "legendFormat": "{{org_id}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Cost by org",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "grafana_prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "cps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 47
+      },
+      "id": 116,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
       },
       "pluginVersion": "12.4.0",
       "targets": [
@@ -672,18 +1381,13 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "builder",
-          "exemplar": false,
-          "expr": "sum(increase(embedding_input_tokens_total{service_name=\"RAG\", deployment_environment=\"$environment\"}[$__range]))",
-          "format": "time_series",
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
+          "expr": "sum by (model) (rate(rag_llm_call_duration_seconds_bucket{deployment_environment=~\"$environment\", workflow=~\"$workflow\", le=\"+Inf\"}[5m]))",
+          "legendFormat": "{{model}}",
           "refId": "A"
         }
       ],
-      "title": "Embedding",
-      "type": "stat"
+      "title": "Call rate by model",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -691,7 +1395,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 55
       },
       "id": 13,
       "panels": [],
@@ -749,7 +1453,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 17
+        "y": 56
       },
       "id": 14,
       "options": {
@@ -839,7 +1543,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 17
+        "y": 56
       },
       "id": 15,
       "options": {
@@ -899,7 +1603,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 65
       },
       "id": 16,
       "panels": [],
@@ -919,7 +1623,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 66
       },
       "repeat": "workflow",
       "repeatDirection": "h",
@@ -1011,7 +1715,7 @@
         "h": 12,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 75
       },
       "repeat": "workflow",
       "repeatDirection": "h",
@@ -1074,6 +1778,26 @@
         },
         "refresh": 1,
         "regex": "",
+        "regexApplyTo": "value",
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "grafana_prometheus"
+        },
+        "includeAll": true,
+        "label": "Org",
+        "multi": true,
+        "name": "org_id",
+        "options": [],
+        "query": "label_values(rag_llm_input_tokens_total{deployment_environment=~\"$environment\"}, org_id)",
+        "refresh": 2,
         "regexApplyTo": "value",
         "type": "query"
       },
