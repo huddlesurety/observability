@@ -11,13 +11,10 @@ otelcol.receiver.otlp "default" {
   output {
     metrics = [otelcol.processor.transform.add_resource_attributes.input]
     logs    = [otelcol.processor.batch.default.input]
-    // Tee traces to Tempo (via batch) AND to the span-metrics / service-graph
-    // connectors that derive Prometheus metrics from spans.
-    traces  = [
-      otelcol.processor.batch.default.input,
-      otelcol.connector.spanmetrics.default.input,
-      otelcol.connector.servicegraph.default.input,
-    ]
+    // Traces flow through the span-kind normalizer, which tees to Tempo (via
+    // batch) AND to the span-metrics / service-graph connectors that derive
+    // Prometheus metrics from spans.
+    traces  = [otelcol.processor.transform.workflow_span_kind.input]
   }
 }
 
@@ -30,6 +27,26 @@ faro.receiver "default" {
 
   output {
     logs   = [loki.process.faro_logs.receiver]
+    traces = [otelcol.processor.transform.workflow_span_kind.input]
+  }
+}
+
+// Normalize Temporal workflow span kinds. The JS SDK's OTel interceptors emit
+// every span as INTERNAL (Go sets CLIENT/SERVER, Python sets SERVER), and the
+// servicegraph connector skips INTERNAL spans entirely — so the Notification
+// worker's RunWorkflow span could never pair with the API's StartWorkflow
+// CLIENT span and the API→Notification edge never formed. Promote INTERNAL
+// RunWorkflow spans to SERVER (matching what Python workers already emit) so
+// the edge pairs; scoped to kind==INTERNAL so Python/Go spans pass untouched.
+otelcol.processor.transform "workflow_span_kind" {
+  error_mode = "ignore"
+  trace_statements {
+    context = "span"
+    statements = [
+      "set(kind, SPAN_KIND_SERVER) where kind == SPAN_KIND_INTERNAL and IsMatch(name, \"^RunWorkflow:\")",
+    ]
+  }
+  output {
     traces = [
       otelcol.processor.batch.default.input,
       otelcol.connector.spanmetrics.default.input,
@@ -84,17 +101,34 @@ otelcol.connector.spanmetrics "default" {
 // client/server span pairs so Grafana can render the service graph.
 otelcol.connector.servicegraph "default" {
   dimensions = ["deployment.environment"]
-  // A DB edge only forms for a client span carrying a "database name" attribute.
-  // The default list is just ["db.name"], but otelpgx (API→postgres) emits
-  // db.system + connection details, not the legacy db.name — so without this the
-  // pgx client spans weren't recognized as DB requests and folded into the
-  // generic "unknown" node. Accept the attributes otelpgx actually sets so the
-  // postgres node forms.
-  database_name_attributes = ["db.name", "db.namespace", "server.address", "db.system"]
+  // A DB edge forms for any client span carrying one of these attributes, and
+  // the connector then routes it straight to a virtual DB node (named from the
+  // matched attribute) WITHOUT pairing it to a server span. The default is just
+  // ["db.name"], but otelpgx (API→postgres) emits db.namespace, not the legacy
+  // db.name — so we add db.namespace to name the postgres node. Keep this list
+  // DB-only: server.address is set on EVERY undici HTTP client span, so listing
+  // it here misclassified the Notification→API (and Notification→Resend) HTTP
+  // calls as DB requests to a virtual "api.railway.internal" node instead of
+  // pairing them with API's server span into a real Notification→API edge.
+  database_name_attributes = ["db.name", "db.namespace"]
+  // Name the uninstrumented peer of an unpaired client span (e.g. Resend, which
+  // has no server span). Defaults are ["peer.service", "db.name", "db.system"];
+  // undici sets none of those, so add server.address to keep external HTTP peers
+  // named (api.resend.com) rather than collapsing into "unknown". This only
+  // applies to spans that CAN'T pair — the Notification→API call still pairs
+  // with API's server span, so it forms a real edge, not a virtual node.
+  virtual_node_peer_attributes = ["peer.service", "db.name", "db.system", "server.address"]
   // Label virtual (uninstrumented) nodes so e.g. the API→postgres edge and the
   // "user" pseudo-node (API server spans with no paired client span) are
   // identifiable rather than silently merged.
   virtual_node_extra_label = true
+  // Client/server spans only pair while both sit in the store. Every service
+  // batches trace exports on a 5s interval, so the two sides of one request can
+  // arrive up to ~5-7s apart — beyond the 2s default TTL, which made real edges
+  // intermittently expire into unknown/user virtual nodes.
+  store {
+    ttl = "15s"
+  }
   output {
     metrics = [otelcol.processor.batch.default.input]
   }
@@ -168,21 +202,21 @@ otelcol.exporter.loki "local" {
 // Exports metrics to Prometheus
 prometheus.remote_write "local" {
   endpoint {
-    url = env("PROMETHEUS_ENDPOINT")
+    url = sys.env("PROMETHEUS_ENDPOINT")
   }
 }
 
 // Exports logs to Loki
 loki.write "local" {
   endpoint {
-    url = env("LOKI_ENDPOINT")
+    url = sys.env("LOKI_ENDPOINT")
   }
 }
 
 // Exports traces to Tempo via OTLP HTTP
 otelcol.exporter.otlphttp "local" {
   client {
-    endpoint = env("TEMPO_ENDPOINT")
+    endpoint = sys.env("TEMPO_ENDPOINT")
   }
 }
 
