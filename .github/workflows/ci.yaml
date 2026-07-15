@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  validate-alloy:
+    name: Validate Alloy config
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    steps:
+      - uses: actions/checkout@v6
+      # mise.toml loads .env.local via [env]; it doesn't exist in CI and mise
+      # errors on a missing env file.
+      - run: touch .env.local
+      - uses: jdx/mise-action@v4
+        with:
+          version: 2026.7.0
+      - run: mise run validate:alloy

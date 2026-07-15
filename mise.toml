@@ -4,6 +4,32 @@ _.file = [".env.local"]
 [tools]
 "aqua:docker/cli" = "latest"
 
+[tasks."validate:alloy"]
+description = "Validate alloy/config.alloy (syntax + component build) in the deploy image"
+# `alloy validate` only checks syntax/blocks/references — it does NOT construct
+# components, so e.g. a bad OTTL statement inside otelcol.processor.transform
+# passes it silently. The second check actually boots the pipeline: a config
+# that fails component build exits immediately, a healthy one runs until
+# timeout kills it (exit 124).
+run = """
+docker run --rm \
+  -e PROMETHEUS_ENDPOINT=http://validate/api/v1/write \
+  -e LOKI_ENDPOINT=http://validate/loki/api/v1/push \
+  -e TEMPO_ENDPOINT=http://validate \
+  -v "$PWD/alloy/config.alloy:/etc/alloy/config.alloy:ro" \
+  grafana/alloy:latest validate /etc/alloy/config.alloy \
+&& docker run --rm \
+  -e PROMETHEUS_ENDPOINT=http://validate/api/v1/write \
+  -e LOKI_ENDPOINT=http://validate/loki/api/v1/push \
+  -e TEMPO_ENDPOINT=http://validate \
+  -v "$PWD/alloy/config.alloy:/etc/alloy/config.alloy:ro" \
+  --entrypoint sh grafana/alloy:latest -c '\
+    timeout 15 alloy run --server.http.listen-addr=127.0.0.1:12345 /etc/alloy/config.alloy > /tmp/alloy.log 2>&1; \
+    code=$?; \
+    if [ "$code" -ne 124 ]; then cat /tmp/alloy.log; echo "alloy run exited $code before timeout — config failed to load"; exit 1; fi; \
+    echo "component build OK (ran healthy until 15s timeout)"'
+"""
+
 [tasks.run]
 description = "Start the full observability stack"
 run = "docker compose up"
