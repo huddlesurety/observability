@@ -466,8 +466,8 @@
       "pluginVersion": "12.4.0",
       "targets": [
         {
-          "editorMode": "builder",
-          "expr": "sum(rate(http_server_request_duration_seconds_sum{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])) / (sum(rate(http_server_request_duration_seconds_count{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "editorMode": "code",
+          "expr": "sum(rate(http_server_request_duration_seconds_sum{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])) / (sum(rate(http_server_request_duration_seconds_count{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "legendFormat": "__auto",
           "range": true,
           "refId": "A"
@@ -562,9 +562,9 @@
             "type": "prometheus",
             "uid": "grafana_prometheus"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "p99",
@@ -577,7 +577,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.9, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.9, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "instant": false,
           "legendFormat": "p90",
           "range": true,
@@ -589,7 +589,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "instant": false,
           "legendFormat": "p50",
           "range": true,
