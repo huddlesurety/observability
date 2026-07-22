@@ -26,6 +26,11 @@ storage:
 compactor:
   compaction:
     compaction_window: 1h
+    # Keep trace blocks for 14d. Set explicitly (this is also Tempo's current
+    # default) to document intent and stay aligned with the Loki 14d
+    # retention_period. Time-based only — Tempo has no size cap, so the
+    # /var/tempo volume must be able to hold 14 days of trace blocks.
+    block_retention: 336h
 
 # Enable the local-blocks processor, which powers TraceQL metrics
 # (count_over_time / quantile_over_time / rate) used by the dashboards.
