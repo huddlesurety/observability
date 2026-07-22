@@ -20,7 +20,7 @@ common:
 
 limits_config:
   allow_structured_metadata: true
-  retention_period: 30d
+  retention_period: 14d
 
 schema_config:
   configs:
