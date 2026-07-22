@@ -651,8 +651,8 @@
       "pluginVersion": "12.4.0",
       "targets": [
         {
-          "editorMode": "builder",
-          "expr": "avg_over_time((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0)[$__range:])",
+          "editorMode": "code",
+          "expr": "avg_over_time(((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "RAG",
           "range": false,
           "refId": "A",
@@ -894,8 +894,8 @@
       "pluginVersion": "12.4.0",
       "targets": [
         {
-          "editorMode": "builder",
-          "expr": "avg_over_time((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0)[$__range:])",
+          "editorMode": "code",
+          "expr": "avg_over_time(((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "Notification",
           "range": false,
           "refId": "A",
