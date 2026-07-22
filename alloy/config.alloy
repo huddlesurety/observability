@@ -47,11 +47,68 @@ otelcol.processor.transform "workflow_span_kind" {
     ]
   }
   output {
+    // Traces destined for Tempo storage go through tail sampling (keep 10% +
+    // all errors + all slow traces). The spanmetrics/servicegraph connectors
+    // deliberately receive the UNSAMPLED 100% stream: they derive RED metrics
+    // and service-graph edges, which must see every span to stay accurate —
+    // sampling before them would undercount request rates ~10x and make edges
+    // flicker. Only the stored-trace branch is sampled.
     traces = [
-      otelcol.processor.batch.default.input,
+      otelcol.processor.tail_sampling.default.input,
       otelcol.connector.spanmetrics.default.input,
       otelcol.connector.servicegraph.default.input,
     ]
+  }
+}
+
+// Tail sampling: decide per WHOLE trace after buffering its spans, so a sampled
+// trace keeps all of its app→api→rag spans together (head sampling at 0.1 per
+// service would multiply to ~0.1% whole-trace retention and shatter traces into
+// rootless fragments). Policies are OR-combined — a trace is kept if ANY matches
+// — so we always retain error and slow traces and probabilistically keep 10% of
+// the rest. Placed only on the Tempo branch; metrics/servicegraph stay at 100%.
+otelcol.processor.tail_sampling "default" {
+  // Buffer a trace this long before deciding. All three services batch-export
+  // spans every 5s (OTEL_BSP_SCHEDULE_DELAY / traceExportInterval), so the spans
+  // of one request can land up to ~5-7s apart; 15s (matching the servicegraph
+  // store TTL) leaves margin so late spans still join the sampling decision
+  // instead of being dropped as a separate rootless trace.
+  decision_wait = "15s"
+  // Max in-flight traces held in memory while awaiting a decision. Sized well
+  // above expected concurrent traces across all envs; overflow evicts oldest.
+  num_traces                  = 50000
+  expected_new_traces_per_sec = 100
+
+  // Always keep traces containing an error span.
+  policy {
+    name = "keep-errors"
+    type = "status_code"
+    status_code {
+      status_codes = ["ERROR"]
+    }
+  }
+
+  // Always keep slow traces (>=1s end-to-end), matching the 1s spanmetrics
+  // histogram bucket boundary — these are the ones worth investigating.
+  policy {
+    name = "keep-slow"
+    type = "latency"
+    latency {
+      threshold_ms = 1000
+    }
+  }
+
+  // Keep 10% of everything else, decided by trace ID (stable across the trace).
+  policy {
+    name = "keep-10-percent"
+    type = "probabilistic"
+    probabilistic {
+      sampling_percentage = 10
+    }
+  }
+
+  output {
+    traces = [otelcol.processor.batch.default.input]
   }
 }
 
@@ -93,7 +150,19 @@ otelcol.connector.spanmetrics "default" {
   namespace = "traces_spanmetrics"
   metrics_flush_interval = "15s"
   output {
-    metrics = [otelcol.processor.batch.default.input]
+    // Route through add_resource_attributes (NOT straight to batch) so the
+    // per-replica `instance` label gets promoted onto these series. The
+    // connector preserves each span's resource attributes (service.instance.id /
+    // replica.id) onto the output metric's RESOURCE and keeps replicas as
+    // separate OTLP streams — but the Prometheus exporter flattens resource
+    // attributes away, so with 2+ replicas both streams collapse to one identity
+    // ({service_name, span_name, span_kind, status_code, ...}) and Prometheus
+    // rejects the second as "duplicate sample for timestamp". The shared
+    // transform folds service.instance.id ?? replica.id into an `instance`
+    // datapoint attribute (→ label), the same fix already applied to resource
+    // metrics — spans bypass that transform, so the connector output must be
+    // sent through it explicitly.
+    metrics = [otelcol.processor.transform.add_resource_attributes.input]
   }
 }
 
