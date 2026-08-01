@@ -104,7 +104,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "(max(temporal_worker_task_slots_available{service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", deployment_environment=\"$environment\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "expr": "(max(temporal_num_pollers{service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", deployment_environment=\"$environment\", namespace=\"$environment\"}) > bool 0) or vector(0)",
           "refId": "A",
           "instant": true,
           "range": false,

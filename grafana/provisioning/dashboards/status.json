@@ -588,7 +588,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "expr": "(max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0)",
           "legendFormat": "RAG",
           "range": false,
           "refId": "A",
@@ -652,7 +652,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg_over_time(((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
+          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "RAG",
           "range": false,
           "refId": "A",
@@ -742,7 +742,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0",
+          "expr": "max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0",
           "legendFormat": "RAG",
           "range": true,
           "refId": "A"
@@ -831,7 +831,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "expr": "(max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0)",
           "legendFormat": "Notification",
           "range": false,
           "refId": "A",
@@ -895,7 +895,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg_over_time(((max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
+          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "Notification",
           "range": false,
           "refId": "A",
@@ -985,7 +985,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(temporal_worker_task_slots_available{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", worker_type=\"WorkflowWorker\", namespace=\"$environment\"}) > bool 0",
+          "expr": "max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0",
           "legendFormat": "Notification",
           "range": true,
           "refId": "A"

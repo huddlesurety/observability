@@ -33,12 +33,12 @@ deleteRules:
 
 groups:
   - orgId: 1
-    name: production
-    folder: App
+    name: App
+    folder: Alerts
     interval: 1m
     rules:
       - uid: afhfmnp2s29dsa
-        title: Status
+        title: App Status
         condition: C
         data:
           - refId: A
@@ -96,7 +96,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: ffhfmol5xltz4f
-        title: CPU
+        title: App CPU
         condition: C
         data:
           - refId: A
@@ -154,7 +154,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: cfhfmy7mb40sge
-        title: Memory
+        title: App Memory
         condition: C
         data:
           - refId: A
@@ -212,7 +212,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: efhfnap8tn0n4e
-        title: Network
+        title: App Network
         condition: C
         data:
           - refId: A
@@ -299,12 +299,12 @@ groups:
         notification_settings:
           receiver: Discord
   - orgId: 1
-    name: production
-    folder: API
+    name: API
+    folder: Alerts
     interval: 1m
     rules:
       - uid: efhfmgwxvtqtca
-        title: Status
+        title: API Status
         condition: C
         data:
           - refId: A
@@ -362,7 +362,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: dfhfmkfo8datcc
-        title: CPU
+        title: API CPU
         condition: C
         data:
           - refId: A
@@ -447,7 +447,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: bfhfmiyyzzo5ca
-        title: Memory
+        title: API Memory
         condition: C
         data:
           - refId: A
@@ -505,7 +505,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: efhfmlb47ury8c
-        title: Network
+        title: API Network
         condition: C
         data:
           - refId: A
@@ -588,12 +588,12 @@ groups:
         notification_settings:
           receiver: Discord
   - orgId: 1
-    name: production
-    folder: RAG
+    name: RAG
+    folder: Alerts
     interval: 1m
     rules:
       - uid: afhfnczwhohkwe
-        title: Status
+        title: RAG Status
         condition: C
         data:
           - refId: A
@@ -606,7 +606,7 @@ groups:
                 type: prometheus
                 uid: grafana_prometheus
               editorMode: code
-              expr: (max(temporal_worker_task_slots_available{service_name="RAG", task_queue="rag", worker_type="WorkflowWorker", deployment_environment="production", namespace="production"}) > bool 0) or vector(0)
+              expr: (max(temporal_num_pollers{service_name="RAG", task_queue="rag", poller_type="workflow_task", deployment_environment="production", namespace="production"}) > bool 0) or vector(0)
               instant: true
               interval: ""
               intervalMs: 120000
@@ -675,7 +675,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: cfhfne08vhts0e
-        title: CPU
+        title: RAG CPU
         condition: C
         data:
           - refId: A
@@ -733,7 +733,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: dfhfnfgqm6f40d
-        title: Memory
+        title: RAG Memory
         condition: C
         data:
           - refId: A
@@ -791,7 +791,7 @@ groups:
         notification_settings:
           receiver: Discord
       - uid: cfhfngynyrhmoc
-        title: Network
+        title: RAG Network
         condition: C
         data:
           - refId: A
