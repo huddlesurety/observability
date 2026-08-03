@@ -1913,10 +1913,6 @@
           {
             "text": "staging",
             "value": "staging"
-          },
-          {
-            "text": "local",
-            "value": "local"
           }
         ],
         "type": "query"
