@@ -148,9 +148,10 @@ otelcol.connector.spanmetrics "default" {
   // series would claim production. A LiteLLM team per environment makes the
   // caller's environment a per-request attribute, and the alias is the readable
   // form ("development"/"staging"/"production") that matches $environment in the
-  // dashboards.
+  // dashboards. Under LITELLM_OTEL_V2 this lives at litellm.team.alias; pre-v2 it
+  // was metadata.user_api_key_team_alias.
   dimension {
-    name = "metadata.user_api_key_team_alias"
+    name = "litellm.team.alias"
   }
   // CUMULATIVE so the Prometheus exporter emits monotonic counters (DELTA would
   // need stateful conversion downstream).
