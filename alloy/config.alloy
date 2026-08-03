@@ -135,6 +135,23 @@ otelcol.connector.spanmetrics "default" {
   dimension {
     name = "workflow.type"
   }
+  // LiteLLM's litellm_request spans carry the resolved model, so promoting it
+  // gives per-model rate/latency/error breakdowns for the gateway. Three models
+  // are configured, and the label is simply absent on every other service's
+  // spans, so the cardinality cost is negligible.
+  dimension {
+    name = "gen_ai.request.model"
+  }
+  // Caller environment for gateway traffic. LiteLLM is ONE shared instance in the
+  // Infrastructure project, so its resource deployment.environment is pinned to
+  // "production" no matter which environment's RAG called it — every LiteLLM
+  // series would claim production. A LiteLLM team per environment makes the
+  // caller's environment a per-request attribute, and the alias is the readable
+  // form ("development"/"staging"/"production") that matches $environment in the
+  // dashboards.
+  dimension {
+    name = "metadata.user_api_key_team_alias"
+  }
   // CUMULATIVE so the Prometheus exporter emits monotonic counters (DELTA would
   // need stateful conversion downstream).
   aggregation_temporality = "CUMULATIVE"
