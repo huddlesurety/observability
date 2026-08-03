@@ -14,7 +14,7 @@ otelcol.receiver.otlp "default" {
     // Traces flow through the span-kind normalizer, which tees to Tempo (via
     // batch) AND to the span-metrics / service-graph connectors that derive
     // Prometheus metrics from spans.
-    traces  = [otelcol.processor.transform.span_normalize.input]
+    traces  = [otelcol.processor.transform.workflow_span_kind.input]
   }
 }
 
@@ -27,7 +27,7 @@ faro.receiver "default" {
 
   output {
     logs   = [loki.process.faro_logs.receiver]
-    traces = [otelcol.processor.transform.span_normalize.input]
+    traces = [otelcol.processor.transform.workflow_span_kind.input]
   }
 }
 
@@ -38,18 +38,12 @@ faro.receiver "default" {
 // CLIENT span and the API→Notification edge never formed. Promote INTERNAL
 // RunWorkflow spans to SERVER (matching what Python workers already emit) so
 // the edge pairs; scoped to kind==INTERNAL so Python/Go spans pass untouched.
-otelcol.processor.transform "span_normalize" {
+otelcol.processor.transform "workflow_span_kind" {
   error_mode = "ignore"
   trace_statements {
     context = "span"
     statements = [
       "set(kind, SPAN_KIND_SERVER) where kind == SPAN_KIND_INTERNAL and IsMatch(name, \"^RunWorkflow:\")",
-      // rag sends the requester org as LiteLLM's customer id, which lands on the
-      // gateway span as litellm.metadata.user_api_key_end_user_id. Copy it onto
-      // org.id — already a promoted spanmetrics dimension from rag's own spans —
-      // so gateway series carry the same org_id label the dashboards filter on
-      // rather than a second, litellm-specific one.
-      "set(attributes[\"org.id\"], attributes[\"litellm.metadata.user_api_key_end_user_id\"]) where attributes[\"org.id\"] == nil and attributes[\"litellm.metadata.user_api_key_end_user_id\"] != nil",
     ]
   }
   output {
@@ -140,24 +134,6 @@ otelcol.connector.spanmetrics "default" {
   // so span name alone can't attribute a duration to a workflow.
   dimension {
     name = "workflow.type"
-  }
-  // LiteLLM's call spans ("chat <model>" / "embeddings <model>" under v2) carry
-  // the resolved model, so promoting it gives per-model rate/latency/error
-  // breakdowns for the gateway. The label is simply absent on every other
-  // service's spans, so the cardinality cost is negligible.
-  dimension {
-    name = "gen_ai.request.model"
-  }
-  // Caller environment for gateway traffic. LiteLLM is ONE shared instance in the
-  // Infrastructure project, so its resource deployment.environment is pinned to
-  // "production" no matter which environment's RAG called it — every LiteLLM
-  // series would claim production. A LiteLLM team per environment makes the
-  // caller's environment a per-request attribute, and the alias is the readable
-  // form ("development"/"staging"/"production") that matches $environment in the
-  // dashboards. Under LITELLM_OTEL_V2 this lives at litellm.team.alias; pre-v2 it
-  // was metadata.user_api_key_team_alias.
-  dimension {
-    name = "litellm.team.alias"
   }
   // CUMULATIVE so the Prometheus exporter emits monotonic counters (DELTA would
   // need stateful conversion downstream).
