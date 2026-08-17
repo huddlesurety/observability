@@ -303,18 +303,6 @@ modules:
         insecure_skip_verify: true
 `
   target {
-    name    = "App-staging"
-    address = "https://app.staging.huddlesurety.com/api/health"
-    module  = "http_2xx"
-  }
-
-  target {
-    name    = "API-staging"
-    address = "https://api.staging.huddlesurety.com/"
-    module  = "http_2xx"
-  }
-
-  target {
     name    = "App-production"
     address = "https://app.huddlesurety.com/api/health"
     module  = "http_2xx"
@@ -327,14 +315,14 @@ modules:
   }
 
   target {
-    name    = "App-development"
-    address = "https://app.development.huddlesurety.com/api/health"
+    name    = "LiteLLM-production"
+    address = "https://litellm.huddlesurety.com/health/liveliness"
     module  = "http_2xx"
   }
 
   target {
-    name    = "API-development"
-    address = "https://api.development.huddlesurety.com/"
+    name    = "Temporal-production"
+    address = "https://temporal.huddlesurety.com/"
     module  = "http_2xx"
   }
 }
