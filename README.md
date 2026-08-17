@@ -1,3 +1,3 @@
 # Observability
 
-Visit [Huddle Docs](https://docs.huddlesurety.co/technology/infrastructure/observability/) for documentation.
+Visit [Huddle Docs](https://docs.huddlesurety.com/technology/infrastructure/observability/) for documentation.
