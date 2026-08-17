@@ -261,7 +261,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     },
     {
@@ -505,7 +505,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     },
     {
@@ -748,7 +748,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     },
     {
@@ -991,7 +991,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     },
     {
@@ -1235,7 +1235,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     },
     {
@@ -1479,7 +1479,7 @@
           "refId": "A"
         }
       ],
-      "title": "Status",
+      "title": "History",
       "type": "status-history"
     }
   ],
@@ -1491,7 +1491,7 @@
     "list": []
   },
   "time": {
-    "from": "now-7d",
+    "from": "now-30d",
     "to": "now"
   },
   "timepicker": {},
