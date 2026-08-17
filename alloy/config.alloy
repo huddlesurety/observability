@@ -301,29 +301,37 @@ modules:
       method: GET
       tls_config:
         insecure_skip_verify: true
+  grpc_health:
+    prober: grpc
+    timeout: 5s
+    grpc:
+      tls: false
+      service: "temporal.api.workflowservice.v1.WorkflowService"
 `
   target {
-    name    = "App-production"
+    name    = "App"
     address = "https://app.huddlesurety.com/api/health"
     module  = "http_2xx"
   }
 
   target {
-    name    = "API-production"
+    name    = "API"
     address = "https://api.huddlesurety.com/"
     module  = "http_2xx"
   }
 
   target {
-    name    = "LiteLLM-production"
+    name    = "LiteLLM"
     address = "https://litellm.huddlesurety.com/health/liveliness"
     module  = "http_2xx"
   }
 
+  // gRPC health check against the server frontend through the same public TCP
+  // proxy the services connect to (TEMPORAL_SERVER_URL), not the UI.
   target {
-    name    = "Temporal-production"
-    address = "https://temporal.huddlesurety.com/"
-    module  = "http_2xx"
+    name    = "Temporal"
+    address = "shuttle.proxy.rlwy.net:32824"
+    module  = "grpc_health"
   }
 }
 
@@ -337,14 +345,14 @@ discovery.relabel "blackbox" {
 
   rule {
     source_labels = ["job"]
-    regex         = "integrations/blackbox/([^-]+)-.*"
+    regex         = "integrations/blackbox/(.*)"
     target_label  = "service_name"
   }
 
+  // Probes are production-only; targets no longer encode the environment.
   rule {
-    source_labels = ["job"]
-    regex         = "integrations/blackbox/[^-]+-(.*)"
-    target_label  = "deployment_environment"
+    target_label = "deployment_environment"
+    replacement  = "production"
   }
 }
 
