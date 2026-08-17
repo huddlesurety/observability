@@ -308,20 +308,46 @@ modules:
       tls: false
       service: "temporal.api.workflowservice.v1.WorkflowService"
 `
+  // Target names encode <Service>-<environment>; the relabel rules below parse
+  // them into service_name / deployment_environment.
   target {
-    name    = "App"
+    name    = "App-production"
     address = "https://app.huddlesurety.com/api/health"
     module  = "http_2xx"
   }
 
   target {
-    name    = "API"
+    name    = "App-staging"
+    address = "https://app.staging.huddlesurety.com/api/health"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "App-development"
+    address = "https://app.development.huddlesurety.com/api/health"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "API-production"
     address = "https://api.huddlesurety.com/"
     module  = "http_2xx"
   }
 
   target {
-    name    = "LiteLLM"
+    name    = "API-staging"
+    address = "https://api.staging.huddlesurety.com/"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "API-development"
+    address = "https://api.development.huddlesurety.com/"
+    module  = "http_2xx"
+  }
+
+  target {
+    name    = "LiteLLM-production"
     address = "https://litellm.huddlesurety.com/health/liveliness"
     module  = "http_2xx"
   }
@@ -329,7 +355,7 @@ modules:
   // gRPC health check against the server frontend through the same public TCP
   // proxy the services connect to (TEMPORAL_SERVER_URL), not the UI.
   target {
-    name    = "Temporal"
+    name    = "Temporal-production"
     address = "shuttle.proxy.rlwy.net:32824"
     module  = "grpc_health"
   }
@@ -345,14 +371,14 @@ discovery.relabel "blackbox" {
 
   rule {
     source_labels = ["job"]
-    regex         = "integrations/blackbox/(.*)"
+    regex         = "integrations/blackbox/([^-]+)-.*"
     target_label  = "service_name"
   }
 
-  // Probes are production-only; targets no longer encode the environment.
   rule {
-    target_label = "deployment_environment"
-    replacement  = "production"
+    source_labels = ["job"]
+    regex         = "integrations/blackbox/[^-]+-(.*)"
+    target_label  = "deployment_environment"
   }
 }
 
