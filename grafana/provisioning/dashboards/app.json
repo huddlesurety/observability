@@ -1905,16 +1905,6 @@
         "refresh": 1,
         "regex": "",
         "regexApplyTo": "value",
-        "staticOptions": [
-          {
-            "text": "production",
-            "value": "production"
-          },
-          {
-            "text": "staging",
-            "value": "staging"
-          }
-        ],
         "type": "query"
       }
     ]
