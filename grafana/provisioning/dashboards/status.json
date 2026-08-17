@@ -100,7 +100,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"})) or vector(0)",
+          "expr": "(max(probe_success{deployment_environment=\"production\", service_name=\"App\"})) or vector(0)",
           "legendFormat": "App",
           "range": false,
           "refId": "A",
@@ -165,7 +165,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"}))[$__range:])",
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"production\", service_name=\"App\"}))[$__range:])",
           "legendFormat": "App",
           "range": false,
           "refId": "A",
@@ -255,7 +255,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"App\"})",
+          "expr": "max(probe_success{deployment_environment=\"production\", service_name=\"App\"})",
           "legendFormat": "App",
           "range": true,
           "refId": "A"
@@ -344,7 +344,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"})) or vector(0)",
+          "expr": "(max(probe_success{deployment_environment=\"production\", service_name=\"API\"})) or vector(0)",
           "legendFormat": "API",
           "range": false,
           "refId": "A",
@@ -409,7 +409,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"}))[$__range:])",
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"production\", service_name=\"API\"}))[$__range:])",
           "legendFormat": "API",
           "range": false,
           "refId": "A",
@@ -499,7 +499,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"API\"})",
+          "expr": "max(probe_success{deployment_environment=\"production\", service_name=\"API\"})",
           "legendFormat": "API",
           "range": true,
           "refId": "A"
@@ -588,7 +588,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "expr": "(max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0) or vector(0)",
           "legendFormat": "RAG",
           "range": false,
           "refId": "A",
@@ -652,7 +652,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
+          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "RAG",
           "range": false,
           "refId": "A",
@@ -742,7 +742,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0",
+          "expr": "max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"RAG\", task_queue=\"rag\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0",
           "legendFormat": "RAG",
           "range": true,
           "refId": "A"
@@ -831,7 +831,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0)",
+          "expr": "(max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0) or vector(0)",
           "legendFormat": "Notification",
           "range": false,
           "refId": "A",
@@ -895,7 +895,7 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0) or vector(0))[$__range:])",
+          "expr": "avg_over_time(((max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0) or vector(0))[$__range:])",
           "legendFormat": "Notification",
           "range": false,
           "refId": "A",
@@ -985,7 +985,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(temporal_num_pollers{deployment_environment=\"$environment\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"$environment\"}) > bool 0",
+          "expr": "max(temporal_num_pollers{deployment_environment=\"production\", service_name=\"Notification\", task_queue=\"notification\", poller_type=\"workflow_task\", namespace=\"production\"}) > bool 0",
           "legendFormat": "Notification",
           "range": true,
           "refId": "A"
@@ -1074,7 +1074,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"Temporal\"})) or vector(0)",
+          "expr": "(max(probe_success{deployment_environment=\"production\", service_name=\"Temporal\"})) or vector(0)",
           "legendFormat": "Temporal",
           "range": false,
           "refId": "A",
@@ -1139,7 +1139,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"Temporal\"}))[$__range:])",
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"production\", service_name=\"Temporal\"}))[$__range:])",
           "legendFormat": "Temporal",
           "range": false,
           "refId": "A",
@@ -1229,7 +1229,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"Temporal\"})",
+          "expr": "max(probe_success{deployment_environment=\"production\", service_name=\"Temporal\"})",
           "legendFormat": "Temporal",
           "range": true,
           "refId": "A"
@@ -1318,7 +1318,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "(max(probe_success{deployment_environment=\"$environment\", service_name=\"LiteLLM\"})) or vector(0)",
+          "expr": "(max(probe_success{deployment_environment=\"production\", service_name=\"LiteLLM\"})) or vector(0)",
           "legendFormat": "LiteLLM",
           "range": false,
           "refId": "A",
@@ -1383,7 +1383,7 @@
       "targets": [
         {
           "editorMode": "builder",
-          "expr": "avg_over_time((max(probe_success{deployment_environment=\"$environment\", service_name=\"LiteLLM\"}))[$__range:])",
+          "expr": "avg_over_time((max(probe_success{deployment_environment=\"production\", service_name=\"LiteLLM\"}))[$__range:])",
           "legendFormat": "LiteLLM",
           "range": false,
           "refId": "A",
@@ -1473,7 +1473,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "builder",
-          "expr": "max(probe_success{deployment_environment=\"$environment\", service_name=\"LiteLLM\"})",
+          "expr": "max(probe_success{deployment_environment=\"production\", service_name=\"LiteLLM\"})",
           "legendFormat": "LiteLLM",
           "range": true,
           "refId": "A"
@@ -1488,30 +1488,7 @@
   "schemaVersion": 42,
   "tags": [],
   "templating": {
-    "list": [
-      {
-        "current": {
-          "text": "production",
-          "value": "production"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "grafana_prometheus"
-        },
-        "definition": "label_values(probe_success,deployment_environment)",
-        "name": "environment",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(probe_success,deployment_environment)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "regexApplyTo": "value",
-        "type": "query"
-      }
-    ]
+    "list": []
   },
   "time": {
     "from": "now-7d",
