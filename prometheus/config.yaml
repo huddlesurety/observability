@@ -5,6 +5,11 @@ global:
   scrape_interval: ${SCRAPE_INTERVAL}
   evaluation_interval: ${EVALUATION_INTERVAL}
 
+# Recording rules that pre-aggregate the high-churn `instance` label off the
+# series the dashboards read. See rules.yaml for the why and the measurements.
+rule_files:
+  - /etc/prometheus/rules.yaml
+
 scrape_configs:
   # Scrapes Prometheus itself
   - job_name: "prometheus"

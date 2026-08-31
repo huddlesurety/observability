@@ -1,0 +1,86 @@
+# Recording rules that pre-collapse the high-churn `instance` label off the
+# series the dashboards aggregate away anyway.
+#
+# Every service replica gets a distinct `instance` label (see the
+# add_resource_attributes transform in alloy/config.alloy) so two replicas never
+# collide on one series identity during a deploy. That label is required at
+# ingest, but no panel groups by it — they all `sum by (le, span_name)` or
+# similar, discarding it. Over a 30d window each Railway deploy leaves behind
+# another `instance` value, so the raw series set grows ~12x while the answer
+# stays the same size:
+#
+#   traces_spanmetrics_duration_seconds_bucket{service_name="API",...}
+#     7d  ->  1,125 series (2 instances)
+#     30d ->  9,621 series (19 instances)  -> 801 once instance/org_id collapse
+#   http_server_request_duration_seconds_bucket{service_name="API",...}
+#     30d -> 10,005 series (14 instances)  -> ~855
+#
+# Prometheus loads all 9,621 to produce 801, which is why the 30d p95-by-route
+# panel took 19s (5.6s of it prepare_time, i.e. series lookup) against 0.67s at
+# 6h for the same 1,000 steps.
+#
+# These rules record the SUMMED COUNTER, not a rate, so the dashboards keep
+# their existing rate()/histogram_quantile() expressions unchanged and only swap
+# the metric name. The more common `sum(rate(...[2m]))` recording-rule shape was
+# measured against live production data and rejected: recombining short-window
+# rates with avg_over_time skewed p95s by up to 151% (RAG) and request rates by
+# up to 100%, because Huddle's traffic is sparse (0.001-0.2 req/s) and most 2m
+# windows contain no increment at all. Recording the counter keeps rate()
+# semantics exact at every dashboard resolution.
+#
+# Tradeoff of summing counters before rate(): when a replica goes away its series
+# goes stale and the sum steps down, which rate() reads as a counter reset and
+# skips. That costs at most one rate window per deploy (~19 times in 30d) and is
+# far smaller than the bias the rate-recording shape introduced.
+#
+# Rules do NOT backfill: panels are fast immediately but only accumulate history
+# from the moment this ships.
+#
+# Naming follows the Prometheus convention level:metric:operations.
+
+groups:
+  - name: spanmetrics
+    # Match the source cadence exactly (spanmetrics connector flushes every 15s,
+    # global scrape_interval is 15s) so the recorded series has the same
+    # resolution as the raw one and $__rate_interval stays valid unchanged.
+    interval: 15s
+    rules:
+      # Drops instance and workflow_type. workflow_type is deliberately not kept:
+      # it multiplies the series by another dimension and the only panel needing
+      # it ("Avg activity duration") reads the _sum/_count metrics, not _bucket.
+      - record: span_name:traces_spanmetrics_duration_seconds_bucket:sum
+        expr: |
+          sum by (service_name, deployment_environment, span_kind, span_name, le) (
+            traces_spanmetrics_duration_seconds_bucket
+          )
+
+      # status_code is kept: "Request & error rate by route" filters
+      # STATUS_CODE_ERROR out of the same series to draw its error line.
+      - record: span_name:traces_spanmetrics_calls:sum
+        expr: |
+          sum by (service_name, deployment_environment, span_kind, span_name, status_code) (
+            traces_spanmetrics_calls_total
+          )
+
+  - name: http
+    interval: 15s
+    rules:
+      # 10,005 series over 30d (57 routes x 15 buckets x 14 instances x method x
+      # status) collapse to ~855. http_route stays because the latency panels
+      # exclude the long-lived /watch SSE routes with http_route!~".*/watch".
+      - record: http_route:http_server_request_duration_seconds_bucket:sum
+        expr: |
+          sum by (service_name, deployment_environment, http_route, le) (
+            http_server_request_duration_seconds_bucket
+          )
+
+  - name: rag
+    interval: 15s
+    rules:
+      # Only instance is dropped here (968 -> ~97 series): workflow, activity and
+      # model are all grouped on by RAG panels.
+      - record: activity:rag_llm_call_duration_seconds_bucket:sum
+        expr: |
+          sum by (service_name, deployment_environment, workflow, activity, model, le) (
+            rag_llm_call_duration_seconds_bucket
+          )

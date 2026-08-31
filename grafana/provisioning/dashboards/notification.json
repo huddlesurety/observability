@@ -730,7 +730,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (span_name) (rate(traces_spanmetrics_calls_total{service_name=\"Notification\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__rate_interval]))",
+          "expr": "sum by (span_name) (rate(span_name:traces_spanmetrics_calls:sum{service_name=\"Notification\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__rate_interval]))",
           "legendFormat": "{{span_name}}",
           "range": true,
           "refId": "A"
@@ -826,7 +826,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by (span_name) (increase(traces_spanmetrics_calls_total{service_name=\"Notification\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__range]))",
+          "expr": "sum by (span_name) (increase(span_name:traces_spanmetrics_calls:sum{service_name=\"Notification\", deployment_environment=\"$environment\", span_name=~\"RunWorkflow:.*\"}[$__range]))",
           "format": "table",
           "instant": true,
           "range": false,
