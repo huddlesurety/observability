@@ -564,7 +564,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.99, sum by(le) (rate(http_route:http_server_request_duration_seconds_bucket:sum{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "format": "time_series",
           "instant": false,
           "legendFormat": "p99",
@@ -577,7 +577,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.9, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.9, sum by (le) (rate(http_route:http_server_request_duration_seconds_bucket:sum{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "instant": false,
           "legendFormat": "p90",
           "range": true,
@@ -589,7 +589,7 @@
             "uid": "grafana_prometheus"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.5, sum by (le) (rate(http_server_request_duration_seconds_bucket{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(http_route:http_server_request_duration_seconds_bucket:sum{deployment_environment=\"$environment\", service_name=\"API\", http_route!~\".*/watch\"}[$__rate_interval])))",
           "instant": false,
           "legendFormat": "p50",
           "range": true,
@@ -951,7 +951,7 @@
           "refId": "A",
           "editorMode": "code",
           "range": true,
-          "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_duration_seconds_bucket{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\"}[$__rate_interval])))",
+          "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(span_name:traces_spanmetrics_duration_seconds_bucket:sum{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\"}[$__rate_interval])))",
           "legendFormat": "{{span_name}}"
         }
       ]
@@ -1036,7 +1036,7 @@
           "refId": "A",
           "editorMode": "code",
           "range": true,
-          "expr": "sum by (span_name) (rate(traces_spanmetrics_calls_total{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\"}[$__rate_interval]))",
+          "expr": "sum by (span_name) (rate(span_name:traces_spanmetrics_calls:sum{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\"}[$__rate_interval]))",
           "legendFormat": "{{span_name}}"
         },
         {
@@ -1047,7 +1047,7 @@
           "refId": "B",
           "editorMode": "code",
           "range": true,
-          "expr": "sum by (span_name) (rate(traces_spanmetrics_calls_total{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\", status_code=\"STATUS_CODE_ERROR\"}[$__rate_interval]))",
+          "expr": "sum by (span_name) (rate(span_name:traces_spanmetrics_calls:sum{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_SERVER\", status_code=\"STATUS_CODE_ERROR\"}[$__rate_interval]))",
           "legendFormat": "error: {{span_name}}"
         }
       ]
@@ -1132,9 +1132,8 @@
           "refId": "A",
           "editorMode": "code",
           "range": true,
-          "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_duration_seconds_bucket{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_CLIENT\", span_name=~\"(query|prepare|batch).*\"}[$__rate_interval])))",
-          "legendFormat": "{{span_name}}",
-          "query": "histogram_quantile(0.95, sum by (le, span_name) (rate(traces_spanmetrics_duration_seconds_bucket{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_CLIENT\", span_name=~\"query|prepare|batch\"}[$__rate_interval])))"
+          "expr": "histogram_quantile(0.95, sum by (le, span_name) (rate(span_name:traces_spanmetrics_duration_seconds_bucket:sum{service_name=\"API\", deployment_environment=\"$environment\", span_kind=\"SPAN_KIND_CLIENT\", span_name=~\"(query|prepare|batch).*\"}[$__rate_interval])))",
+          "legendFormat": "{{span_name}}"
         }
       ]
     },

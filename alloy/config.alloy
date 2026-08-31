@@ -120,13 +120,16 @@ otelcol.connector.spanmetrics "default" {
   // name/kind/status are always emitted). deployment.environment (a resource
   // attribute) becomes the deployment_environment label so dashboards can filter
   // by $environment like every other panel — without it the span-metrics have no
-  // env label and env-scoped queries return nothing. org.id lets us slice by
-  // tenant.
+  // env label and env-scoped queries return nothing.
+  //
+  // org.id was removed here: it multiplied every span-metric series (including
+  // the duration histogram, already multiplied by `le`) by the tenant count and
+  // grows unbounded as customers are added, while no panel ever grouped
+  // span-metrics by it — the per-tenant cost/token panels read rag_llm_* and
+  // rag_embedding_*, which carry their own org_id and are unaffected. Re-add
+  // only with a concrete per-tenant RED query in mind.
   dimension {
     name = "deployment.environment"
-  }
-  dimension {
-    name = "org.id"
   }
   // Parent workflow type (stamped on RAG activity spans by the identity
   // interceptor) so span-metrics — and dashboards built on them — can split
